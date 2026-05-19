@@ -92,62 +92,67 @@ h2{
 </head>
 <body>
 
-<header>SAHP MDT SYSTEM</header>
+<header>MCD SYSTEM</header>
 
 <div class="container">
 
-<div class="sidebar">
+    <!-- LEVÝ PANEL (FORMULÁŘ) -->
+    <div class="sidebar">
 
-<input type="text" id="caseNumber" placeholder="Spisové číslo">
+        <input type="text" id="caseNumber" placeholder="Spisové číslo">
 
-<input type="text" id="firstName" placeholder="Jméno">
+        <input type="text" id="firstName" placeholder="Jméno">
 
-<input type="text" id="lastName" placeholder="Příjmení">
+        <input type="text" id="lastName" placeholder="Příjmení">
 
-<input type="text" id="phone" placeholder="Telefon">
+        <input type="text" id="phone" placeholder="Telefon">
 
-<input type="text" id="license" placeholder="Licence">
+        <input type="text" id="license" placeholder="Licence">
 
-<input type="text" id="vehicles" placeholder="Vozidla">
+        <input type="text" id="vehicles" placeholder="Vozidla">
 
-<input type="text" id="photo" placeholder="Odkaz na fotku">
+        <input type="text" id="photo" placeholder="Odkaz na fotku">
 
-<input type="text" id="evidence" placeholder="Evidenční čísla důkazů">
+        <input type="text" id="evidence" placeholder="Důkazy">
 
-<textarea id="notes" placeholder="Poznámky"></textarea>
+        <textarea id="notes" placeholder="Poznámky"></textarea>
 
-<input type="text" id="investigator" placeholder="Vyšetřovatel">
-<button onclick="addPerson()">Uložit spis</button>
+        <input type="text" id="investigator" placeholder="Vyšetřovatel">
+
+        <button onclick="addPerson()">Uložit spis</button>
+
+    </div>
+
+    <!-- PRAVÝ PANEL (SEZNAM) -->
+    <div class="main">
+
+        <h2>MCD - Osoby v pátrání</h2>
+
+        <input 
+            type="text" 
+            id="search" 
+            placeholder="Hledat jméno, příjmení nebo ID..."
+        >
+
+        <div id="list"></div>
+
+    </div>
+
 </div>
 
-<div class="main">
-
-
-<h2>MCD - Osoby v pátrání</h2>
-
-<input type="text" id="search" placeholder="Hledat jméno, příjmení nebo ID..." onkeyup="render()">
-<button onclick="render()">Hledat</button>
-    
-<div id="list"></div>
-
-
-</div>
-
-</div>
+</body>
 
 <script>
 
-let persons = JSON.parse(localStorage.getItem("persons")) || [];
-
-function saveData(){
-    localStorage.setItem("persons", JSON.stringify(persons));
-
-
 let data = [];
 
+// =======================
+// NAČTENÍ DAT Z GOOGLE SHEETS
+// =======================
 async function loadData(){
 
     const res = await fetch("https://script.google.com/macros/s/AKfycby-FdLycjvcZgsI3bUqM_S2e9yFDTxJQFZRnXBtE8DYiiwYw306I7ifVb99ebsyboJTrw/exec");
+
     data = await res.json();
 
     render();
@@ -156,11 +161,12 @@ async function loadData(){
 loadData();
 
 
-}
-
+// =======================
+// PŘIDÁNÍ OSOBY (DO SHEETS)
+// =======================
 async function addPerson(){
 
-    const data = {
+    const payload = {
         caseNumber: document.getElementById("caseNumber").value,
         firstName: document.getElementById("firstName").value,
         lastName: document.getElementById("lastName").value,
@@ -175,19 +181,18 @@ async function addPerson(){
 
     await fetch("https://script.google.com/macros/s/AKfycby-FdLycjvcZgsI3bUqM_S2e9yFDTxJQFZRnXBtE8DYiiwYw306I7ifVb99ebsyboJTrw/exec", {
         method: "POST",
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
     });
 
     alert("Spis uložen");
 
+    loadData(); // refresh seznamu
 }
 
-function deletePerson(id){
-    persons = persons.filter(p => p.id !== id);
-    saveData();
-    renderPersons();
-}
 
+// =======================
+// VYKRESLENÍ + SEARCH
+// =======================
 function render(){
 
     const search = document.getElementById("search").value.toLowerCase();
@@ -195,11 +200,16 @@ function render(){
 
     list.innerHTML = "";
 
-    const filtered = data.filter(p => 
-        (p.jmeno && p.jmeno.toLowerCase().includes(search)) ||
-        (p.prijmeni && p.prijmeni.toLowerCase().includes(search)) ||
-        (p.id && p.id.toLowerCase().includes(search))
-    );
+    const filtered = data.filter(p => {
+
+        const text = `
+            ${p.jmeno || ""}
+            ${p.prijmeni || ""}
+            ${p.id || ""}
+        `.toLowerCase();
+
+        return text.includes(search);
+    });
 
     filtered.forEach(p => {
 
@@ -211,8 +221,8 @@ function render(){
         div.style.borderRadius = "8px";
 
         div.innerHTML = `
-            <b>${p.jmeno} ${p.prijmeni}</b><br>
-            ID: ${p.id}<br>
+            <b>${p.jmeno || ""} ${p.prijmeni || ""}</b><br>
+            ID: ${p.id || "-"}<br>
             Status: ${p.status || "-"}<br>
             Stav: ${p.stav || "-"}
         `;
@@ -222,7 +232,17 @@ function render(){
 }
 
 
-renderPersons();
+// =======================
+// LIVE SEARCH (automaticky)
+// =======================
+document.addEventListener("DOMContentLoaded", () => {
+
+    const searchInput = document.getElementById("search");
+
+    if(searchInput){
+        searchInput.addEventListener("input", render);
+    }
+});
 
 </script>
 
