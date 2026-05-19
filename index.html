@@ -122,9 +122,13 @@ h2{
 
 <div class="main">
 
-<h2>Evidence osob</h2>
 
-<div id="persons"></div>
+<h2>MCD - Osoby v pátrání</h2>
+
+<input type="text" id="search" placeholder="Hledat jméno, příjmení nebo ID..." onkeyup="render()">
+
+<div id="list"></div>
+
 
 </div>
 
@@ -136,6 +140,21 @@ let persons = JSON.parse(localStorage.getItem("persons")) || [];
 
 function saveData(){
     localStorage.setItem("persons", JSON.stringify(persons));
+
+
+let data = [];
+
+async function loadData(){
+
+    const res = await fetch("https://script.google.com/macros/s/AKfycby-FdLycjvcZgsI3bUqM_S2e9yFDTxJQFZRnXBtE8DYiiwYw306I7ifVb99ebsyboJTrw/exec");
+    data = await res.json();
+
+    render();
+}
+
+loadData();
+
+
 }
 
 async function addPerson(){
@@ -168,49 +187,39 @@ function deletePerson(id){
     renderPersons();
 }
 
-function renderPersons(){
+function render(){
 
-    const container = document.getElementById("persons");
     const search = document.getElementById("search").value.toLowerCase();
+    const list = document.getElementById("list");
 
-    container.innerHTML = "";
+    list.innerHTML = "";
 
-    persons
-    .filter(p => p.name.toLowerCase().includes(search))
-    .forEach(person => {
+    const filtered = data.filter(p => 
+        (p.jmeno && p.jmeno.toLowerCase().includes(search)) ||
+        (p.prijmeni && p.prijmeni.toLowerCase().includes(search)) ||
+        (p.id && p.id.toLowerCase().includes(search))
+    );
+
+    filtered.forEach(p => {
 
         const div = document.createElement("div");
-        div.className = "person";
+
+        div.style.background = "#1e293b";
+        div.style.padding = "10px";
+        div.style.marginTop = "10px";
+        div.style.borderRadius = "8px";
 
         div.innerHTML = `
-            <h3>${person.name}</h3>
-
-            <div class="small">
-                ID: ${person.id}
-            </div>
-
-            <p>${person.note || "Bez poznámky"}</p>
-
-            <strong>Trestní historie:</strong>
-
-            ${person.crimes.length
-                ? person.crimes.map(c =>
-                    `<div class="crime">${c}</div>`
-                  ).join("")
-                : "<p>Bez záznamu</p>"
-            }
-
-            <button onclick="deletePerson(${person.id})"
-            style="margin-top:15px; background:#dc2626;">
-                Smazat
-            </button>
+            <b>${p.jmeno} ${p.prijmeni}</b><br>
+            ID: ${p.id}<br>
+            Status: ${p.status || "-"}<br>
+            Stav: ${p.stav || "-"}
         `;
 
-        container.appendChild(div);
-
+        list.appendChild(div);
     });
-
 }
+
 
 renderPersons();
 
