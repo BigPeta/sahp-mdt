@@ -21,9 +21,10 @@
     .btn-edit { background: #10b981; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0;}
     .btn-edit:hover { background: #059669; }
     .card { background:#1e293b; padding:15px; border-radius:8px; margin-top:15px; border-left: 4px solid #2563eb; position: relative;}
-    .card span { color: #94a3b8; font-size: 12px; font-weight: bold;}
+    .card span.label { color: #94a3b8; font-size: 12px; font-weight: bold;}
     .card-actions { display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px;}
-    .search-bar { margin-bottom: 20px; font-size: 16px; border: 2px solid #2563eb;}
+    .category-badge { float: right; color: #60a5fa; border: 1px solid #60a5fa; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase;}
+    .search-bar { margin-bottom: 20px; font-size: 16px; border: 2px solid #2563eb; background: #0f1720;}
     h3 { margin-top: 0; color: #60a5fa; }
     #loader { display: none; color: #fbbf24; font-size: 14px; margin-top: 10px; font-weight: bold; text-align: center;}
     .edit-mode { border: 2px solid #10b981 !important; background: #064e3b !important; }
@@ -32,7 +33,7 @@
 <body>
 
 <header>
-    <span>MCD SYSTEM - Pokročilá Správa</span>
+    <span>MCD SYSTEM - Centrální Databáze</span>
     <select id="categorySelector" style="width: 250px; margin: 0;" onchange="changeCategory()">
         <option value="Osoby v pátrání">Osoby v pátrání</option>
         <option value="Informatori">Informátoři</option>
@@ -45,23 +46,22 @@
     <div class="sidebar">
         <h3 id="formTitle">Nový záznam</h3>
         <div id="dynamicForm"></div>
-        <div id="loader">Probíhá komunikace s databází...</div>
+        <div id="loader">Komunikace s databází...</div>
         
         <button id="submitBtn" onclick="saveRecord()">Uložit záznam</button>
         <button id="cancelEditBtn" class="btn-secondary" style="display:none;" onclick="cancelEdit()">Zrušit úpravu</button>
     </div>
 
     <div class="main">
-        <input type="text" id="search" class="search-bar" placeholder="Fulltextové vyhledávání (jméno, příjmení, ID, spisové číslo, telefon, vozidlo...)" oninput="renderList()">
+        <input type="text" id="search" class="search-bar" placeholder="Globální vyhledávání napříč databází (jméno, ID, SPZ, organizace...)" oninput="renderList()">
         <div id="recordList"></div>
     </div>
 </div>
 
 <script>
-// !!! SEM VLOŽ SVŮJ AKTUALIZOVANÝ ODKAZ Z GOOGLE APPS SCRIPTU !!!
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmetWRx6oWkpMn90ttIA4Op3RD9RFVpH-tbN1RPZRH006WQyDIuCDZRLfCH3NtIadFEA/exec";
+// SEM VLOŽ SVŮJ ODKAZ (ujisti se, že jsi dal Novou verzi nasazení!)
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZMvhj37eowNY3aB0EdPFpt01vsL24MRBHfLrtjQhTJAth4N-n5poPVadUdXzi_FPq2Q/exec";
 
-// Definice struktury formulářů (musí přesně sedět s pořadím sloupců v Sheets B, C, D...)
 const formSchemas = {
     "Osoby v pátrání": [
         { id: "Jméno", type: "text", placeholder: "Jméno" },
@@ -103,21 +103,13 @@ const formSchemas = {
     ]
 };
 
-let currentData = [];
-let editingId = null; // Pokud je zde ID, znamená to, že zrovna upravujeme záznam
+let currentData = []; 
+let editingId = null; 
 
-function changeCategory() {
-    if (editingId) {
-        if (!confirm("Máš rozepsanou úpravu záznamu. Chceš ji zahodit a změnit kategorii?")) {
-            return;
-        }
-    }
-    cancelEdit();
-    
-    const category = document.getElementById("categorySelector").value;
+// Vykreslení formuláře podle kategorie
+function buildForm(category) {
     const schema = formSchemas[category];
     const formDiv = document.getElementById("dynamicForm");
-    
     formDiv.innerHTML = "";
 
     schema.forEach(field => {
@@ -140,16 +132,30 @@ function changeCategory() {
             formDiv.appendChild(input);
         }
     });
-
-    loadData();
 }
 
+function changeCategory() {
+    if (editingId) {
+        if (!confirm("Máš rozepsanou úpravu záznamu. Chceš ji zahodit?")) {
+            // Vrátíme select zpět na kategorii upravovaného záznamu
+            const record = currentData.find(r => r.ID === editingId);
+            if (record) document.getElementById("categorySelector").value = record._Kategorie;
+            return;
+        }
+        cancelEdit();
+    }
+    
+    const category = document.getElementById("categorySelector").value;
+    document.getElementById("formTitle").innerText = "Nový záznam: " + category;
+    buildForm(category);
+    renderList(); 
+}
+
+// Stažení VŠECH dat ze VŠECH listů naráz
 async function loadData() {
     document.getElementById("loader").style.display = "block";
-    const category = document.getElementById("categorySelector").value;
-    
     try {
-        const res = await fetch(`${SCRIPT_URL}?sheet=${category}`);
+        const res = await fetch(`${SCRIPT_URL}?sheet=all`);
         currentData = await res.json();
         renderList();
     } catch (e) {
@@ -178,16 +184,12 @@ async function saveRecord() {
     };
 
     try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
+        const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
         
         if (result.status === "success") {
-            alert(editingId ? "Záznam byl úspěšně upraven!" : "Nový záznam uložen!");
             cancelEdit();
-            loadData();
+            await loadData(); // Znovu načteme aktuální data z DB
         } else {
             alert("Chyba z databáze: " + result.message);
         }
@@ -202,15 +204,17 @@ function startEdit(id) {
     if (!record) return;
 
     editingId = id;
-    const category = document.getElementById("categorySelector").value;
-    const schema = formSchemas[category];
+    
+    // Automaticky přepne levý formulář do kategorie, ze které záznam pochází
+    document.getElementById("categorySelector").value = record._Kategorie;
+    buildForm(record._Kategorie);
 
     document.getElementById("formTitle").innerText = "Úprava záznamu: " + id;
     document.getElementById("submitBtn").innerText = "Uložit změny";
     document.getElementById("submitBtn").classList.add("edit-mode");
     document.getElementById("cancelEditBtn").style.display = "block";
 
-    // Naplnění formuláře uloženými daty
+    const schema = formSchemas[record._Kategorie];
     schema.forEach(field => {
         if (document.getElementById(field.id)) {
             document.getElementById(field.id).value = record[field.id] || "";
@@ -238,27 +242,25 @@ function cancelEdit() {
 
 async function deleteRecord(id) {
     if (!confirm(`Opravdu si přeješ TRVALE SMAZAT záznam ${id}?`)) return;
+    
+    const record = currentData.find(r => r.ID === id);
+    if(!record) return;
 
     document.getElementById("loader").style.display = "block";
-    const category = document.getElementById("categorySelector").value;
 
     const payload = {
-        sheetName: category,
+        sheetName: record._Kategorie,
         action: "delete",
         id: id,
         rowData: []
     };
 
     try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
+        const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
         if (result.status === "success") {
-            alert("Záznam smazán.");
             if (editingId === id) cancelEdit();
-            loadData();
+            await loadData();
         } else {
             alert("Chyba při mazání: " + result.message);
         }
@@ -270,49 +272,63 @@ async function deleteRecord(id) {
 
 function renderList() {
     const search = document.getElementById("search").value.toLowerCase();
+    const currentCategory = document.getElementById("categorySelector").value;
     const listDiv = document.getElementById("recordList");
     listDiv.innerHTML = "";
 
-    if (currentData.length === 0) {
-        listDiv.innerHTML = "<p style='color: #94a3b8; text-align:center;'>V této kategorii zatím nejsou žádné záznamy.</p>";
+    let filteredData = [];
+
+    // Logika chytrého vyhledávání
+    if (search.trim() === "") {
+        // Vyhledávání je prázdné = ukaž jen aktuální kategorii
+        filteredData = currentData.filter(row => row._Kategorie === currentCategory);
+    } else {
+        // Uživatel něco hledá = prohledej ÚPLNĚ VŠECHNO
+        filteredData = currentData.filter(row => {
+            const rowText = Object.values(row).join(" ").toLowerCase();
+            return rowText.includes(search);
+        });
+    }
+
+    if (filteredData.length === 0) {
+        listDiv.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Žádné záznamy nebyly nalezeny.</p>";
         return;
     }
 
-    currentData.forEach(row => {
-        // Fulltext search přes všechny buňky řádku
-        const rowText = Object.values(row).join(" ").toLowerCase();
+    filteredData.forEach(row => {
+        const card = document.createElement("div");
+        card.className = "card";
         
-        if (rowText.includes(search)) {
-            const card = document.createElement("div");
-            card.className = "card";
-            
-            let html = `<b>ID Záznamu: ${row.ID}</b><br><br>`;
-            for (let key in row) {
-                if (key !== "ID" && row[key] !== "") {
-                    // Pokud klíč obsahuje slovo fotka a hodnota vypadá jako odkaz, uděláme náhled
-                    if (key.toLowerCase().includes("fotka") && row[key].startsWith("http")) {
-                        html += `<span>${key}:</span><br><img src="${row[key]}" style="max-width: 150px; border-radius:4px; margin: 5px 0;"><br>`;
-                    } else {
-                        html += `<span>${key}:</span> ${row[key]}<br>`;
-                    }
+        // Hlavička karty s ID a štítkem kategorie
+        let html = `<b>ID: ${row.ID}</b> <span class="category-badge">${row._Kategorie}</span><br><br>`;
+        
+        for (let key in row) {
+            if (key !== "ID" && key !== "_Kategorie" && row[key] !== "") {
+                if (key.toLowerCase().includes("fotka") && row[key].startsWith("http")) {
+                    html += `<span class="label">${key}:</span><br><img src="${row[key]}" style="max-width: 150px; border-radius:4px; margin: 5px 0;"><br>`;
+                } else {
+                    html += `<span class="label">${key}:</span> ${row[key]}<br>`;
                 }
             }
-
-            // Akční tlačítka pro úpravu a smazání
-            html += `
-                <div class="card-actions">
-                    <button class="btn-edit" onclick="startEdit('${row.ID}')">✏️ Upravit</button>
-                    <button class="btn-danger" onclick="deleteRecord('${row.ID}')">🗑️ Smazat</button>
-                </div>
-            `;
-            
-            card.innerHTML = html;
-            listDiv.appendChild(card);
         }
+
+        html += `
+            <div class="card-actions">
+                <button class="btn-edit" onclick="startEdit('${row.ID}')">✏️ Upravit</button>
+                <button class="btn-danger" onclick="deleteRecord('${row.ID}')">🗑️ Smazat</button>
+            </div>
+        `;
+        
+        card.innerHTML = html;
+        listDiv.appendChild(card);
     });
 }
 
-window.onload = changeCategory;
+// Při prvním načtení stáhneme data a sestavíme výchozí formulář
+window.onload = () => {
+    buildForm(document.getElementById("categorySelector").value);
+    loadData();
+};
 </script>
 </body>
 </html>
