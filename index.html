@@ -79,11 +79,11 @@
 
     /* ZÁKONY (PDF) */
     #pdfSection { display: none; flex: 1; overflow: hidden; }
-    .pdf-btn { background: #1e293b; border: 1px solid #3b82f6; color: white; padding: 12px; width: 100%; text-align: left; border-radius: 6px; cursor: pointer; margin-bottom: 10px; font-weight: bold;}
-    .pdf-btn:hover { background: #3b82f6; }
+    .pdf-btn { background: #1e293b; border: 1px solid #3b82f6; color: #cbd5e1; padding: 8px 12px; width: 100%; text-align: left; border-radius: 6px; cursor: pointer; margin-bottom: 5px; font-size: 12px; font-weight: bold; transition: 0.2s;}
+    .pdf-btn:hover { background: #3b82f6; color: white; }
     #pdfFrame { width: 100%; height: 100%; border: none; background: #fff; border-radius: 8px;}
 
-    /* --- MOBILNÍ RESPONZIVITA (PŘEPSÁNO PRO PERFEKTNÍ FUNGOVÁNÍ) --- */
+    /* --- MOBILNÍ RESPONZIVITA --- */
     @media (max-width: 768px) {
         body { overflow-y: auto !important; }
         #mainApp { height: auto !important; display: block !important; }
@@ -105,12 +105,12 @@
         .login-left, .login-right { width: 100%; }
         .login-left { border-right: none; border-bottom: 1px solid #1e293b; }
 
-        /* Generátor formuláře - plná šířka na mobilu */
+        /* Generátor formuláře */
         .inline-form-row { flex-direction: column; align-items: stretch; }
         .inline-input { width: 100% !important; box-sizing: border-box; margin-bottom: 5px; }
 
-        /* Mapa a PDF - nastavení výšky aby se dalo listovat */
-        #mapSection { min-height: 60vh; display: flex !important; }
+        /* Mapa a PDF - nastavení výšky OPRAVA */
+        #mapSection { min-height: 60vh; } /* Zde bylo smazáno "display: flex !important;", které blokovalo skrývání */
         .map-controls { bottom: 10px; right: 10px; }
         #pdfSection .main { height: 75vh; }
     }
@@ -230,8 +230,26 @@
 
     <div id="pdfSection" class="container">
         <div class="sidebar">
-            <h3 style="margin-bottom: 15px;">Seznam zákonů</h3>
-            <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/14-2001-Trestní%20zákoník%20a%20řád.pdf')">📄 Trestní zákoník a řád</button>
+            <h3 style="margin-bottom: 15px; color:#f8fafc;">Seznam zákonů</h3>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/1-2001-Ústava%20San%20Andreaské%20republiky.pdf')">📄 Ústava San Andreaské republiky</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/2-2001-Listina%20základních%20práv%20a%20svobod.pdf')">📄 Listina základních práv a svobod</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/3-2001-Zákon%20o%20soudech%20a%20úřadu%20státního%20návladního.pdf')">📄 Zákon o soudech a úřadu státního návladního</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/4-2001-Zákon%20o%20služebním%20poměru%20příslušníků%20bezpečnostních%20sborů.pdf')">📄 Zákon o služebním poměru (B.S.)</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/5-2026-Občanský%20zákoník.pdf')">📄 Občanský zákoník</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/6-2026-Zákon%20o%20zbraních%20a%20střelivu.pdf')">📄 Zákon o zbraních a střelivu</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/7-2001-Zákon%20o%20Los%20Santos%20Fire%20Department.pdf')">📄 Zákon o Los Santos Fire Department</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/8-2001-Zákon%20o%20správě%20San%20Andreas%20Medical%20Services%20a%20zdravotní%20péče%20občanům%20státu%20San%20Andreas.pdf')">📄 Zákon o SAMS a zdravotní péči</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/9-2001-Zákon%20o%20námořní%20bezpečnosti.pdf')">📄 Zákon o námořní bezpečnosti</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/10-2001-Zákon%20o%20letectví%20a%20vzdušném%20prostoru.pdf')">📄 Zákon o letectví a vzdušném prostoru</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/11-2001-Zákon%20o%20podnikání%20v%20soukromém%20a%20veřejném%20právu.pdf')">📄 Zákon o podnikání</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/12-2001-Zákon%20o%20advokacii.pdf')">📄 Zákon o advokacii</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/13-2001-Zákon%20o%20bezpečnosti%20a%20provozu%20na%20pozemních%20komunikacích.pdf')">📄 Zákon o silničním provozu</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/14-2001-Trestní%20zákoník%20a%20řád.pdf')">📄 Trestní zákoník a řád</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/15-2001-Zákon%20o%20Los%20Santos%20Police%20Department.pdf')">📄 Zákon o Los Santos Police Department</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/16-2001-Zákon%20o%20Los%20Santos%20Sheriff%27s%20Department.pdf')">📄 Zákon o Los Santos Sheriff's Dept.</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/17-2001-Zákon%20o%20omamných%20a%20psychotropních%20látkách.pdf')">📄 Zákon o omamných a psychotropních látkách</button>
+            </div>
             <p style="color:#64748b; font-size: 12px; margin-top: 20px;">
                 Vyberte zákon vlevo a otevře se přímo v prohlížeči.
             </p>
@@ -273,7 +291,7 @@ function switchTab(tabId) {
     document.getElementById('pdfSection').style.display = 'none';
 
     if (tabId === 'db') document.getElementById('databaseSection').style.display = 'flex';
-    if (tabId === 'map') document.getElementById('mapSection').style.display = 'block'; // Block je potřeba pro mapu kvůli výšce
+    if (tabId === 'map') document.getElementById('mapSection').style.display = 'flex'; 
     if (tabId === 'tpl') {
         document.getElementById('templatesSection').style.display = 'flex';
         changeTemplate(); 
