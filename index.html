@@ -1,251 +1,318 @@
-```html
 <!DOCTYPE html>
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAHP MDT</title>
-
+<title>Policejní Databáze - MDT PRO</title>
 <style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#0f1720;
-    color:white;
-}
-
-header{
-    background:#111827;
-    padding:20px;
-    font-size:28px;
-    font-weight:bold;
-    border-bottom:2px solid #1e293b;
-}
-
-.container{
-    display:flex;
-    height:calc(100vh - 80px);
-}
-
-.sidebar{
-    width:300px;
-    background:#111827;
-    padding:20px;
-    border-right:2px solid #1e293b;
-    overflow:auto;
-}
-
-.main{
-    flex:1;
-    padding:20px;
-    overflow:auto;
-}
-
-input, textarea, button{
-    width:100%;
-    margin-top:10px;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    background:#1e293b;
-    color:white;
-    box-sizing:border-box;
-}
-
-button{
-    background:#2563eb;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-button:hover{
-    background:#1d4ed8;
-}
-
-.person{
-    background:#1e293b;
-    padding:15px;
-    border-radius:10px;
-    margin-top:15px;
-}
-
-.crime{
-    background:#0f1720;
-    padding:10px;
-    border-radius:8px;
-    margin-top:8px;
-}
-
-.search{
-    margin-bottom:20px;
-}
-
-.small{
-    font-size:13px;
-    color:#94a3b8;
-}
-
-h2{
-    margin-top:0;
-}
+    body { margin:0; font-family:Arial, sans-serif; background:#0f1720; color:white; }
+    header { background:#111827; padding:20px; font-size:24px; font-weight:bold; border-bottom:2px solid #1e293b; display: flex; justify-content: space-between; align-items: center;}
+    .container { display:flex; height:calc(100vh - 70px); }
+    .sidebar { width:340px; background:#111827; padding:20px; border-right:2px solid #1e293b; overflow-y:auto; display: flex; flex-direction: column; }
+    .main { flex:1; padding:20px; overflow-y:auto; }
+    input, select, textarea, button { width:100%; margin-top:8px; padding:10px; border:none; border-radius:6px; background:#1e293b; color:white; box-sizing:border-box; }
+    select { appearance: none; cursor: pointer; }
+    button { background:#2563eb; cursor:pointer; font-weight:bold; margin-top: 15px;}
+    button:hover { background:#1d4ed8; }
+    .btn-secondary { background: #475569; margin-top: 5px; }
+    .btn-secondary:hover { background: #334155; }
+    .btn-danger { background: #dc2626; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0; margin-left: 5px;}
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-edit { background: #10b981; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0;}
+    .btn-edit:hover { background: #059669; }
+    .card { background:#1e293b; padding:15px; border-radius:8px; margin-top:15px; border-left: 4px solid #2563eb; position: relative;}
+    .card span { color: #94a3b8; font-size: 12px; font-weight: bold;}
+    .card-actions { display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px;}
+    .search-bar { margin-bottom: 20px; font-size: 16px; border: 2px solid #2563eb;}
+    h3 { margin-top: 0; color: #60a5fa; }
+    #loader { display: none; color: #fbbf24; font-size: 14px; margin-top: 10px; font-weight: bold; text-align: center;}
+    .edit-mode { border: 2px solid #10b981 !important; background: #064e3b !important; }
 </style>
 </head>
 <body>
 
-<header>MCD SYSTEM</header>
+<header>
+    <span>MCD SYSTEM - Pokročilá Správa</span>
+    <select id="categorySelector" style="width: 250px; margin: 0;" onchange="changeCategory()">
+        <option value="Osoby v pátrání">Osoby v pátrání</option>
+        <option value="Informatori">Informátoři</option>
+        <option value="Zadrzene osoby">Zadržené osoby</option>
+        <option value="Organizovane skupiny">Organizované skupiny</option>
+    </select>
+</header>
 
 <div class="container">
-
-    <!-- LEVÝ PANEL (FORMULÁŘ) -->
     <div class="sidebar">
-
-        <input type="text" id="caseNumber" placeholder="Spisové číslo">
-
-        <input type="text" id="firstName" placeholder="Jméno">
-
-        <input type="text" id="lastName" placeholder="Příjmení">
-
-        <input type="text" id="phone" placeholder="Telefon">
-
-        <input type="text" id="license" placeholder="Licence">
-
-        <input type="text" id="vehicles" placeholder="Vozidla">
-
-        <input type="text" id="photo" placeholder="Odkaz na fotku">
-
-        <input type="text" id="evidence" placeholder="Důkazy">
-
-        <textarea id="notes" placeholder="Poznámky"></textarea>
-
-        <input type="text" id="investigator" placeholder="Vyšetřovatel">
-
-        <button onclick="addPerson()">Uložit spis</button>
-
+        <h3 id="formTitle">Nový záznam</h3>
+        <div id="dynamicForm"></div>
+        <div id="loader">Probíhá komunikace s databází...</div>
+        
+        <button id="submitBtn" onclick="saveRecord()">Uložit záznam</button>
+        <button id="cancelEditBtn" class="btn-secondary" style="display:none;" onclick="cancelEdit()">Zrušit úpravu</button>
     </div>
 
-    <!-- PRAVÝ PANEL (SEZNAM) -->
     <div class="main">
-
-        <h2>MCD - Osoby v pátrání</h2>
-
-        <input 
-            type="text" 
-            id="search" 
-            placeholder="Hledat jméno, příjmení nebo ID..."
-        >
-
-        <div id="list"></div>
-
+        <input type="text" id="search" class="search-bar" placeholder="Fulltextové vyhledávání (jméno, příjmení, ID, spisové číslo, telefon, vozidlo...)" oninput="renderList()">
+        <div id="recordList"></div>
     </div>
-
 </div>
 
-</body>
-
 <script>
+// !!! SEM VLOŽ SVŮJ AKTUALIZOVANÝ ODKAZ Z GOOGLE APPS SCRIPTU !!!
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-FdLycjvcZgsI3bUqM_S2e9yFDTxJQFZRnXBtE8DYiiwYw306I7ifVb99ebsyboJTrw/exec";
 
-let data = [];
+// Definice struktury formulářů (musí přesně sedět s pořadím sloupců v Sheets B, C, D...)
+const formSchemas = {
+    "Osoby v pátrání": [
+        { id: "Jméno", type: "text", placeholder: "Jméno" },
+        { id: "Příjmení", type: "text", placeholder: "Příjmení" },
+        { id: "Datum narození", type: "text", placeholder: "Datum narození (DD.MM.RRRR)" },
+        { id: "Důvod zatykače", type: "text", placeholder: "Důvod zatykače" },
+        { id: "Status", type: "select", options: ["Neozbrojen", "Neznámo", "Nebezpečný"] },
+        { id: "Stav pátrání", type: "select", options: ["Aktivní", "Pozastaveno", "Dopaden"] },
+        { id: "Oblast výskytu", type: "text", placeholder: "Oblast výskytu" },
+        { id: "Vozidla", type: "text", placeholder: "Vozidla (SPZ / model)" },
+        { id: "Vedoucí detektiv", type: "text", placeholder: "Vedoucí detektiv" }
+    ],
+    "Informatori": [
+        { id: "Krycí jméno", type: "text", placeholder: "Krycí jméno" },
+        { id: "Skutečné Jméno", type: "text", placeholder: "Skutečné Jméno" },
+        { id: "Skutečné Příjmení", type: "text", placeholder: "Skutečné Příjmení" },
+        { id: "Datum narození", type: "text", placeholder: "Datum narození" },
+        { id: "Telefon", type: "text", placeholder: "Telefon" },
+        { id: "Zaměstnání", type: "text", placeholder: "Zaměstnání" },
+        { id: "Status odměny", type: "select", options: ["Placený", "Neplacený"] },
+        { id: "Stav informátora", type: "select", options: ["Aktivní", "Neaktivní", "Prozrazen", "Mrtvý"] },
+        { id: "Odpovědný detektiv", type: "text", placeholder: "Odpovědný detektiv" }
+    ],
+    "Zadrzene osoby": [
+        { id: "Jméno", type: "text", placeholder: "Jméno" },
+        { id: "Příjmení", type: "text", placeholder: "Příjmení" },
+        { id: "Datum narození", type: "text", placeholder: "Datum narození" },
+        { id: "Fotka", type: "text", placeholder: "URL fotky" },
+        { id: "Tresty", type: "text", placeholder: "Tresty" },
+        { id: "Důkazy", type: "text", placeholder: "Důkazy (číslo důkazu)" },
+        { id: "Poznámky", type: "textarea", placeholder: "Poznámky" }
+    ],
+    "Organizovane skupiny": [
+        { id: "Název", type: "text", placeholder: "Název skupiny / Firmy" },
+        { id: "Sídlo", type: "text", placeholder: "Sídlo (postal)" },
+        { id: "Krytí", type: "text", placeholder: "Krytí (pokud existuje)" },
+        { id: "Spisové číslo", type: "text", placeholder: "Spisové číslo/a" },
+        { id: "Poznámky", type: "textarea", placeholder: "Poznámky" }
+    ]
+};
 
-// =======================
-// NAČTENÍ DAT Z GOOGLE SHEETS
-// =======================
-async function loadData(){
+let currentData = [];
+let editingId = null; // Pokud je zde ID, znamená to, že zrovna upravujeme záznam
 
-    const res = await fetch("https://script.google.com/macros/s/AKfycby-FdLycjvcZgsI3bUqM_S2e9yFDTxJQFZRnXBtE8DYiiwYw306I7ifVb99ebsyboJTrw/exec");
+function changeCategory() {
+    if (editingId) {
+        if (!confirm("Máš rozepsanou úpravu záznamu. Chceš ji zahodit a změnit kategorii?")) {
+            return;
+        }
+    }
+    cancelEdit();
+    
+    const category = document.getElementById("categorySelector").value;
+    const schema = formSchemas[category];
+    const formDiv = document.getElementById("dynamicForm");
+    
+    formDiv.innerHTML = "";
 
-    data = await res.json();
+    schema.forEach(field => {
+        if (field.type === "select") {
+            let select = document.createElement("select");
+            select.id = field.id;
+            field.options.forEach(opt => {
+                let option = document.createElement("option");
+                option.value = opt; option.innerText = opt;
+                select.appendChild(option);
+            });
+            formDiv.appendChild(select);
+        } else if (field.type === "textarea") {
+            let textarea = document.createElement("textarea");
+            textarea.id = field.id; textarea.placeholder = field.placeholder;
+            formDiv.appendChild(textarea);
+        } else {
+            let input = document.createElement("input");
+            input.id = field.id; input.placeholder = field.placeholder; input.type = "text";
+            formDiv.appendChild(input);
+        }
+    });
 
-    render();
+    loadData();
 }
 
-loadData();
+async function loadData() {
+    document.getElementById("loader").style.display = "block";
+    const category = document.getElementById("categorySelector").value;
+    
+    try {
+        const res = await fetch(`${SCRIPT_URL}?sheet=${category}`);
+        currentData = await res.json();
+        renderList();
+    } catch (e) {
+        alert("Chyba při stahování dat ze serveru.");
+    }
+    document.getElementById("loader").style.display = "none";
+}
 
+async function saveRecord() {
+    const category = document.getElementById("categorySelector").value;
+    const schema = formSchemas[category];
+    
+    let rowData = [];
+    schema.forEach(field => {
+        let val = document.getElementById(field.id).value;
+        rowData.push(val);
+    });
 
-// =======================
-// PŘIDÁNÍ OSOBY (DO SHEETS)
-// =======================
-async function addPerson(){
+    document.getElementById("loader").style.display = "block";
 
     const payload = {
-        caseNumber: document.getElementById("caseNumber").value,
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
-        phone: document.getElementById("phone").value,
-        license: document.getElementById("license").value,
-        vehicles: document.getElementById("vehicles").value,
-        photo: document.getElementById("photo").value,
-        evidence: document.getElementById("evidence").value,
-        notes: document.getElementById("notes").value,
-        investigator: document.getElementById("investigator").value
+        sheetName: category,
+        action: editingId ? "update" : "create",
+        id: editingId,
+        rowData: rowData
     };
 
-    await fetch("https://script.google.com/macros/s/AKfycby-FdLycjvcZgsI3bUqM_S2e9yFDTxJQFZRnXBtE8DYiiwYw306I7ifVb99ebsyboJTrw/exec", {
-        method: "POST",
-        body: JSON.stringify(payload)
-    });
-
-    alert("Spis uložen");
-
-    loadData(); // refresh seznamu
-}
-
-
-// =======================
-// VYKRESLENÍ + SEARCH
-// =======================
-function render(){
-
-    const search = document.getElementById("search").value.toLowerCase();
-    const list = document.getElementById("list");
-
-    list.innerHTML = "";
-
-    const filtered = data.filter(p => {
-
-        const text = `
-            ${p.jmeno || ""}
-            ${p.prijmeni || ""}
-            ${p.id || ""}
-        `.toLowerCase();
-
-        return text.includes(search);
-    });
-
-    filtered.forEach(p => {
-
-        const div = document.createElement("div");
-
-        div.style.background = "#1e293b";
-        div.style.padding = "10px";
-        div.style.marginTop = "10px";
-        div.style.borderRadius = "8px";
-
-        div.innerHTML = `
-            <b>${p.jmeno || ""} ${p.prijmeni || ""}</b><br>
-            ID: ${p.id || "-"}<br>
-            Status: ${p.status || "-"}<br>
-            Stav: ${p.stav || "-"}
-        `;
-
-        list.appendChild(div);
-    });
-}
-
-
-// =======================
-// LIVE SEARCH (automaticky)
-// =======================
-document.addEventListener("DOMContentLoaded", () => {
-
-    const searchInput = document.getElementById("search");
-
-    if(searchInput){
-        searchInput.addEventListener("input", render);
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        
+        if (result.status === "success") {
+            alert(editingId ? "Záznam byl úspěšně upraven!" : "Nový záznam uložen!");
+            cancelEdit();
+            loadData();
+        } else {
+            alert("Chyba z databáze: " + result.message);
+        }
+    } catch (e) {
+        alert("Chyba při odesílání požadavku!");
     }
-});
+    document.getElementById("loader").style.display = "none";
+}
 
+function startEdit(id) {
+    const record = currentData.find(r => r.ID === id);
+    if (!record) return;
+
+    editingId = id;
+    const category = document.getElementById("categorySelector").value;
+    const schema = formSchemas[category];
+
+    document.getElementById("formTitle").innerText = "Úprava záznamu: " + id;
+    document.getElementById("submitBtn").innerText = "Uložit změny";
+    document.getElementById("submitBtn").classList.add("edit-mode");
+    document.getElementById("cancelEditBtn").style.display = "block";
+
+    // Naplnění formuláře uloženými daty
+    schema.forEach(field => {
+        if (document.getElementById(field.id)) {
+            document.getElementById(field.id).value = record[field.id] || "";
+        }
+    });
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelEdit() {
+    editingId = null;
+    const category = document.getElementById("categorySelector").value;
+    document.getElementById("formTitle").innerText = "Nový záznam: " + category;
+    document.getElementById("submitBtn").innerText = "Uložit záznam";
+    document.getElementById("submitBtn").classList.remove("edit-mode");
+    document.getElementById("cancelEditBtn").style.display = "none";
+
+    const schema = formSchemas[category];
+    if(schema) {
+        schema.forEach(field => {
+            if (document.getElementById(field.id)) document.getElementById(field.id).value = "";
+        });
+    }
+}
+
+async function deleteRecord(id) {
+    if (!confirm(`Opravdu si přeješ TRVALE SMAZAT záznam ${id}?`)) return;
+
+    document.getElementById("loader").style.display = "block";
+    const category = document.getElementById("categorySelector").value;
+
+    const payload = {
+        sheetName: category,
+        action: "delete",
+        id: id,
+        rowData: []
+    };
+
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.status === "success") {
+            alert("Záznam smazán.");
+            if (editingId === id) cancelEdit();
+            loadData();
+        } else {
+            alert("Chyba při mazání: " + result.message);
+        }
+    } catch(e) {
+        alert("Chyba sítě při mazání záznamu.");
+    }
+    document.getElementById("loader").style.display = "none";
+}
+
+function renderList() {
+    const search = document.getElementById("search").value.toLowerCase();
+    const listDiv = document.getElementById("recordList");
+    listDiv.innerHTML = "";
+
+    if (currentData.length === 0) {
+        listDiv.innerHTML = "<p style='color: #94a3b8; text-align:center;'>V této kategorii zatím nejsou žádné záznamy.</p>";
+        return;
+    }
+
+    currentData.forEach(row => {
+        // Fulltext search přes všechny buňky řádku
+        const rowText = Object.values(row).join(" ").toLowerCase();
+        
+        if (rowText.includes(search)) {
+            const card = document.createElement("div");
+            card.className = "card";
+            
+            let html = `<b>ID Záznamu: ${row.ID}</b><br><br>`;
+            for (let key in row) {
+                if (key !== "ID" && row[key] !== "") {
+                    // Pokud klíč obsahuje slovo fotka a hodnota vypadá jako odkaz, uděláme náhled
+                    if (key.toLowerCase().includes("fotka") && row[key].startsWith("http")) {
+                        html += `<span>${key}:</span><br><img src="${row[key]}" style="max-width: 150px; border-radius:4px; margin: 5px 0;"><br>`;
+                    } else {
+                        html += `<span>${key}:</span> ${row[key]}<br>`;
+                    }
+                }
+            }
+
+            // Akční tlačítka pro úpravu a smazání
+            html += `
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="startEdit('${row.ID}')">✏️ Upravit</button>
+                    <button class="btn-danger" onclick="deleteRecord('${row.ID}')">🗑️ Smazat</button>
+                </div>
+            `;
+            
+            card.innerHTML = html;
+            listDiv.appendChild(card);
+        }
+    });
+}
+
+window.onload = changeCategory;
 </script>
-
 </body>
 </html>
-```
