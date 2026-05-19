@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SASP Terminal - MDT PRO</title>
+<title>SASP Terminal - MDT SECURE</title>
 <style>
     body { margin:0; font-family:Arial, sans-serif; background:#0b1119; color:white; overflow: hidden; }
     
-    /* --- LOGIN SCREEN STYLES --- */
+    /* LOGIN SCREEN STYLES */
     #loginScreen { display: flex; width: 100vw; height: 100vh; align-items: center; justify-content: center; background: #0b1119; }
     .login-box { display: flex; background: #111827; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; width: 750px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     .login-left { width: 40%; background: #0d131c; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 1px solid #1e293b; }
@@ -17,35 +17,30 @@
     .badge { border: 1px solid #1e3a8a; color: #60a5fa; padding: 4px 12px; font-size: 10px; font-weight: bold; letter-spacing: 2px; border-radius: 4px; background: rgba(30, 58, 138, 0.2); }
     
     .login-right { width: 60%; padding: 40px; display: flex; flex-direction: column; justify-content: center;}
-    .login-right h3 { margin-top: 0; font-size: 11px; letter-spacing: 1.5px; color: #64748b; text-transform: uppercase; margin-bottom: 25px; }
-    .input-group { margin-bottom: 20px; }
-    .input-group label { display: block; font-size: 12px; color: #64748b; margin-bottom: 8px; }
+    .login-right h3 { margin-top: 0; font-size: 11px; letter-spacing: 1.5px; color: #64748b; text-transform: uppercase; margin-bottom: 20px; }
+    .input-group { margin-bottom: 15px; }
+    .input-group label { display: block; font-size: 12px; color: #64748b; margin-bottom: 6px; }
     .name-row { display: flex; gap: 10px; }
     .login-right input, .login-right select { width: 100%; padding: 12px; background: #0f1720; border: 1px solid #1e293b; color: white; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
     .login-right select { appearance: none; cursor: pointer; }
-    .login-right input:focus, .login-right select:focus { outline: none; border-color: #3b82f6; }
-    .btn-login { background: #3b82f6; width: 100%; padding: 12px; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; transition: 0.2s;}
+    .btn-login { background: #3b82f6; width: 100%; padding: 12px; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px;}
     .btn-login:hover { background: #2563eb; }
     .checkbox-row { display: flex; align-items: center; gap: 8px; margin-top: 15px; font-size: 12px; color: #64748b; }
-    .checkbox-row input { width: 16px; height: 16px; margin: 0; cursor: pointer; }
 
-    /* --- MAIN APP STYLES --- */
+    /* MAIN APP STYLES */
     #mainApp { display: none; flex-direction: column; height: 100vh; }
     header { background:#111827; padding:15px 20px; font-size:20px; font-weight:bold; border-bottom:2px solid #1e293b; display: flex; justify-content: space-between; align-items: center;}
     .header-left { display: flex; align-items: center; gap: 20px; }
     .header-right { display: flex; align-items: center; gap: 15px; font-size: 14px; color: #94a3b8; }
     .btn-logout { background: transparent; border: 1px solid #dc2626; color: #ef4444; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;}
-    .btn-logout:hover { background: #dc2626; color: white; }
     .container { display:flex; flex: 1; overflow: hidden;}
     .sidebar { width:340px; background:#111827; padding:20px; border-right:2px solid #1e293b; overflow-y:auto; display: flex; flex-direction: column; }
     .main { flex:1; padding:20px; overflow-y:auto; }
     .sidebar input, .sidebar select, .sidebar textarea { width:100%; margin-top:8px; padding:10px; border:1px solid #334155; border-radius:6px; background:#1e293b; color:white; box-sizing:border-box; }
     .sidebar button { background:#2563eb; width: 100%; padding: 12px; border:none; border-radius:6px; color:white; cursor:pointer; font-weight:bold; margin-top: 15px;}
-    .sidebar button:hover { background:#1d4ed8; }
     .btn-secondary { background: #475569 !important; margin-top: 5px !important; }
-    .btn-secondary:hover { background: #334155 !important; }
-    .btn-danger { background: #dc2626; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0; margin-left: 5px; color:white; border:none; border-radius:4px; cursor:pointer;}
-    .btn-edit { background: #10b981; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0; color:white; border:none; border-radius:4px; cursor:pointer;}
+    .btn-danger { background: #dc2626; padding: 6px 12px; font-size: 12px; margin-left: 5px; color:white; border:none; border-radius:4px; cursor:pointer;}
+    .btn-edit { background: #10b981; padding: 6px 12px; font-size: 12px; color:white; border:none; border-radius:4px; cursor:pointer;}
     .card { background:#1e293b; padding:15px; border-radius:8px; margin-top:15px; border-left: 4px solid #2563eb; }
     .card span.label { color: #94a3b8; font-size: 12px; font-weight: bold;}
     .card-actions { display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px;}
@@ -53,7 +48,7 @@
     .search-bar { margin-bottom: 20px; font-size: 16px; border: 2px solid #2563eb; background: #0f1720; width: 100%; padding: 12px; color:white; border-radius: 6px; box-sizing: border-box;}
     h3 { margin-top: 0; color: #60a5fa; }
     #loader { display: none; color: #fbbf24; font-size: 14px; margin-top: 10px; font-weight: bold; text-align: center;}
-    .edit-mode { border: 2px solid #10b981 !important; background: #064e3b !important; }
+    .admin-category { background: #450a0a !important; color: #fca5a5 !important; border-color: #ef4444 !important; }
 </style>
 </head>
 <body>
@@ -62,7 +57,7 @@
     <div class="login-box">
         <div class="login-left">
             <div class="logo-circle">🛡️</div>
-            <h2>MCD Terminal</h2>
+            <h2>SASP Terminal</h2>
             <p>Secure Document Terminal<br>San Andreas State Police</p>
             <div class="badge">CLASSIFIED</div>
         </div>
@@ -78,6 +73,7 @@
                     <option value="Detective III">Detective III</option>
                     <option value="Detective II">Detective II</option>
                     <option value="Detective I">Detective I</option>
+                    <option value="CSI">CSI</option>
                 </select>
             </div>
             
@@ -89,7 +85,12 @@
                 </div>
             </div>
 
-            <button class="btn-login" onclick="performLogin()">Přihlásit se</button>
+            <div class="input-group">
+                <label>Heslo hodnosti</label>
+                <input type="password" id="loginPassword" placeholder="Zadejte bezpečnostní kód">
+            </div>
+
+            <button class="btn-login" onclick="performLogin()">Ověřit a přihlásit</button>
 
             <div class="checkbox-row">
                 <input type="checkbox" id="rememberMe">
@@ -102,13 +103,13 @@
 <div id="mainApp">
     <header>
         <div class="header-left">
-            <span>MCD Terminal</span>
+            <span>SASP Terminal</span>
             <select id="categorySelector" style="width: 200px; padding: 6px; background: #1e293b; color:white; border:none; border-radius:4px;" onchange="changeCategory()">
                 <option value="Osoby v pátrání">Osoby v pátrání</option>
                 <option value="Informatori">Informátoři</option>
                 <option value="Zadrzene osoby">Zadržené osoby</option>
                 <option value="Organizovane skupiny">Organizované skupiny</option>
-            </select>
+                </select>
         </div>
         <div class="header-right">
             <span id="loggedInUser">Neznámý Uživatel</span>
@@ -135,9 +136,18 @@
 
 <script>
 // !!! SEM VLOŽ SVŮJ ODKAZ Z APPS SCRIPTU !!!
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZMvhj37eowNY3aB0EdPFpt01vsL24MRBHfLrtjQhTJAth4N-n5poPVadUdXzi_FPq2Q/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlrn9aUv_mIXB2S7cDy2edvPGXj3QVZzYvyQxbvqciH_d1DNTujo0ifZguT1NVo1eMrQ/exec";
 
-// --- LOGIN LOGIKA ---
+// --- NASTAVENÍ HESEL PRO HODNOSTI ---
+const RANK_PASSWORDS = {
+    "Staff": "Orel15",
+    "Lieutenant": "Koza10",
+    "Detective III": "Husa20",
+    "Detective II": "Lev30",
+    "Detective I": "Vlk40",
+    "CSI": "Sova50"
+};
+
 let activeUser = "";
 
 function checkAuth() {
@@ -148,6 +158,15 @@ function checkAuth() {
         document.getElementById("mainApp").style.display = "flex";
         document.getElementById("loggedInUser").innerText = "👤 " + activeUser;
         
+        // Zpřístupnění tajných sekcí logů pro Vedení (Staff / Lieutenant)
+        const isHighCommand = activeUser.startsWith("Staff") || activeUser.startsWith("Lieutenant");
+        const categorySelector = document.getElementById("categorySelector");
+        
+        if (isHighCommand && !document.getElementById("optLogy")) {
+            categorySelector.innerHTML += `<option id="optArchiv" value="Archiv smazanych" class="admin-category">[ADMIN] Archiv smazaných</option>`;
+            categorySelector.innerHTML += `<option id="optLogy" value="Logy" class="admin-category">[ADMIN] Systémové logy</option>`;
+        }
+
         changeCategory();
     } else {
         document.getElementById("loginScreen").style.display = "flex";
@@ -159,10 +178,17 @@ function performLogin() {
     const rank = document.getElementById("loginRank").value;
     const fName = document.getElementById("loginFName").value.trim();
     const lName = document.getElementById("loginLName").value.trim();
+    const password = document.getElementById("loginPassword").value;
     const remember = document.getElementById("rememberMe").checked;
 
-    if (!rank || !fName || !lName) {
-        alert("Prosím vyplňte hodnost, jméno i příjmení.");
+    if (!rank || !fName || !lName || !password) {
+        alert("Prosím vyplňte všechna pole včetně hesla.");
+        return;
+    }
+
+    // Ochrana hesel
+    if (RANK_PASSWORDS[rank] !== password) {
+        alert("CHYBA: Zadaný bezpečnostní kód se neshoduje s vybranou hodností!");
         return;
     }
 
@@ -183,11 +209,17 @@ function logout() {
     document.getElementById("loginRank").value = "";
     document.getElementById("loginFName").value = "";
     document.getElementById("loginLName").value = "";
+    document.getElementById("loginPassword").value = "";
+    // Odstranění ADMIN menu
+    const optLogy = document.getElementById("optLogy");
+    const optArchiv = document.getElementById("optArchiv");
+    if(optLogy) optLogy.remove();
+    if(optArchiv) optArchiv.remove();
+    
     checkAuth();
 }
 
 window.onload = checkAuth;
-
 
 // --- DATABÁZOVÁ LOGIKA ---
 const formSchemas = {
@@ -235,13 +267,22 @@ let currentData = [];
 let editingId = null; 
 
 function buildForm(category) {
-    const schema = formSchemas[category];
     const formDiv = document.getElementById("dynamicForm");
+    const submitBtn = document.getElementById("submitBtn");
     formDiv.innerHTML = "";
 
+    // Zabezpečení proti zápisu do logů z webu
+    if (category === "Logy" || category === "Archiv smazanych") {
+        formDiv.innerHTML = "<p style='color:#fca5a5;'>Tato sekce je generována systémem. Nelze sem přidávat záznamy manuálně.</p>";
+        submitBtn.style.display = "none";
+        return;
+    }
+
+    submitBtn.style.display = "block";
+    const schema = formSchemas[category];
+    
     schema.forEach(field => {
         let inputElement;
-        
         if (field.type === "select") {
             inputElement = document.createElement("select");
             inputElement.id = field.id;
@@ -258,7 +299,6 @@ function buildForm(category) {
             inputElement.id = field.id; inputElement.placeholder = field.placeholder; inputElement.type = "text";
         }
         
-        // AUTOMATICKÉ DOPLŇOVÁNÍ PŘIHLÁŠENÉHO DETEKTIVA (Pouze pro nové záznamy!)
         if (!editingId && (field.id === "Vedoucí detektiv" || field.id === "Odpovědný detektiv")) {
             inputElement.value = activeUser;
         }
@@ -278,7 +318,7 @@ function changeCategory() {
     }
     
     const category = document.getElementById("categorySelector").value;
-    document.getElementById("formTitle").innerText = "Nový záznam: " + category;
+    document.getElementById("formTitle").innerText = "Záznam: " + category;
     buildForm(category);
     loadData(); 
 }
@@ -311,7 +351,8 @@ async function saveRecord() {
         sheetName: category,
         action: editingId ? "update" : "create",
         id: editingId,
-        rowData: rowData
+        rowData: rowData,
+        user: activeUser // Předáváme uživatele do logů!
     };
 
     try {
@@ -354,22 +395,26 @@ function startEdit(id) {
 function cancelEdit() {
     editingId = null;
     const category = document.getElementById("categorySelector").value;
-    document.getElementById("formTitle").innerText = "Nový záznam: " + category;
+    document.getElementById("formTitle").innerText = "Záznam: " + category;
     document.getElementById("submitBtn").innerText = "Uložit záznam";
     document.getElementById("submitBtn").classList.remove("edit-mode");
     document.getElementById("cancelEditBtn").style.display = "none";
-
-    // Znovu sestavíme formulář, čímž se do kolonky detektiva opět načte aktivní uživatel
     buildForm(category);
 }
 
 async function deleteRecord(id) {
-    if (!confirm(`Opravdu smazat záznam ${id}?`)) return;
+    if (!confirm(`Opravdu smazat záznam ${id}? (Bude přesunut do archivu)`)) return;
     const record = currentData.find(r => r.ID === id);
     if(!record) return;
 
     document.getElementById("loader").style.display = "block";
-    const payload = { sheetName: record._Kategorie, action: "delete", id: id, rowData: [] };
+    const payload = { 
+        sheetName: record._Kategorie, 
+        action: "delete", 
+        id: id, 
+        rowData: [],
+        user: activeUser // Předáváme uživatele do logů!
+    };
 
     try {
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
@@ -391,19 +436,23 @@ function renderList() {
     const listDiv = document.getElementById("recordList");
     listDiv.innerHTML = "";
 
+    // Hierarchie práv
+    const isHighCommand = activeUser.startsWith("Staff") || activeUser.startsWith("Lieutenant");
+    const isCSI = activeUser.startsWith("CSI");
+
     let filteredData = search.trim() === "" 
         ? currentData.filter(row => row._Kategorie === currentCategory)
         : currentData.filter(row => removeDiacritics(Object.values(row).join(" ").toLowerCase()).includes(search));
 
     if (filteredData.length === 0) {
-        listDiv.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Žádné záznamy nebyly nalezeny.</p>";
+        listDiv.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Žádné záznamy.</p>";
         return;
     }
 
     filteredData.forEach(row => {
         const card = document.createElement("div");
         card.className = "card";
-        let html = `<b>ID: ${row.ID}</b> <span class="category-badge">${row._Kategorie}</span><br><br>`;
+        let html = `<b>ID: ${row.ID || row["ID Záznamu"] || "N/A"}</b> <span class="category-badge">${row._Kategorie}</span><br><br>`;
         
         for (let key in row) {
             if (key !== "ID" && key !== "_Kategorie" && row[key] !== "") {
@@ -414,12 +463,28 @@ function renderList() {
                 }
             }
         }
-        html += `
-            <div class="card-actions">
+
+        // KONTROLA PRÁV PRO ZOBRAZENÍ TLAČÍTEK
+        const isOwner = (row["Vedoucí detektiv"] === activeUser) || (row["Odpovědný detektiv"] === activeUser);
+        const canEdit = isHighCommand || (isOwner && !isCSI);
+        const isSystemCategory = (row._Kategorie === "Logy" || row._Kategorie === "Archiv smazanych");
+
+        html += `<div class="card-actions">`;
+        
+        if (isSystemCategory) {
+            html += `<span style="color: #64748b; font-size: 11px;">🔒 Systémový záznam (Úpravy zakázány)</span>`;
+        } else if (canEdit) {
+            html += `
                 <button class="btn-edit" onclick="startEdit('${row.ID}')">✏️ Upravit</button>
                 <button class="btn-danger" onclick="deleteRecord('${row.ID}')">🗑️ Smazat</button>
-            </div>
-        `;
+            `;
+        } else if (isCSI) {
+            html += `<span style="color: #64748b; font-size: 11px;">🔒 CSI má povoleno pouze čtení a zápis</span>`;
+        } else {
+            html += `<span style="color: #64748b; font-size: 11px;">🔒 Odepřen přístup k úpravám (Nejste autor spisu)</span>`;
+        }
+        
+        html += `</div>`;
         card.innerHTML = html;
         listDiv.appendChild(card);
     });
