@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SASP Terminal - MDT</title>
+<title>SASP Terminal - MDT PRO</title>
 <style>
     body { margin:0; font-family:Arial, sans-serif; background:#0b1119; color:white; overflow: hidden; }
     
@@ -141,7 +141,6 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZMvhj37eowNY3aB0Ed
 let activeUser = "";
 
 function checkAuth() {
-    // Zkusíme najít uživatele v lokální i dočasné paměti
     activeUser = localStorage.getItem("mdt_user") || sessionStorage.getItem("mdt_user");
     
     if (activeUser) {
@@ -149,7 +148,6 @@ function checkAuth() {
         document.getElementById("mainApp").style.display = "flex";
         document.getElementById("loggedInUser").innerText = "👤 " + activeUser;
         
-        // Nastartování databáze až po přihlášení
         changeCategory();
     } else {
         document.getElementById("loginScreen").style.display = "flex";
@@ -182,18 +180,16 @@ function performLogin() {
 function logout() {
     localStorage.removeItem("mdt_user");
     sessionStorage.removeItem("mdt_user");
-    // Vyčištění formuláře pro příští přihlášení
     document.getElementById("loginRank").value = "";
     document.getElementById("loginFName").value = "";
     document.getElementById("loginLName").value = "";
     checkAuth();
 }
 
-// Spustit ověření ihned po načtení
 window.onload = checkAuth;
 
 
-// --- DATABÁZOVÁ LOGIKA (Z PŘEDCHOZÍ VERZE) ---
+// --- DATABÁZOVÁ LOGIKA ---
 const formSchemas = {
     "Osoby v pátrání": [
         { id: "Jméno", type: "text", placeholder: "Jméno" },
@@ -244,24 +240,30 @@ function buildForm(category) {
     formDiv.innerHTML = "";
 
     schema.forEach(field => {
+        let inputElement;
+        
         if (field.type === "select") {
-            let select = document.createElement("select");
-            select.id = field.id;
+            inputElement = document.createElement("select");
+            inputElement.id = field.id;
             field.options.forEach(opt => {
                 let option = document.createElement("option");
                 option.value = opt; option.innerText = opt;
-                select.appendChild(option);
+                inputElement.appendChild(option);
             });
-            formDiv.appendChild(select);
         } else if (field.type === "textarea") {
-            let textarea = document.createElement("textarea");
-            textarea.id = field.id; textarea.placeholder = field.placeholder;
-            formDiv.appendChild(textarea);
+            inputElement = document.createElement("textarea");
+            inputElement.id = field.id; inputElement.placeholder = field.placeholder;
         } else {
-            let input = document.createElement("input");
-            input.id = field.id; input.placeholder = field.placeholder; input.type = "text";
-            formDiv.appendChild(input);
+            inputElement = document.createElement("input");
+            inputElement.id = field.id; inputElement.placeholder = field.placeholder; inputElement.type = "text";
         }
+        
+        // AUTOMATICKÉ DOPLŇOVÁNÍ PŘIHLÁŠENÉHO DETEKTIVA (Pouze pro nové záznamy!)
+        if (!editingId && (field.id === "Vedoucí detektiv" || field.id === "Odpovědný detektiv")) {
+            inputElement.value = activeUser;
+        }
+
+        formDiv.appendChild(inputElement);
     });
 }
 
@@ -346,6 +348,7 @@ function startEdit(id) {
             document.getElementById(field.id).value = record[field.id] || "";
         }
     });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function cancelEdit() {
@@ -356,12 +359,8 @@ function cancelEdit() {
     document.getElementById("submitBtn").classList.remove("edit-mode");
     document.getElementById("cancelEditBtn").style.display = "none";
 
-    const schema = formSchemas[category];
-    if(schema) {
-        schema.forEach(field => {
-            if (document.getElementById(field.id)) document.getElementById(field.id).value = "";
-        });
-    }
+    // Znovu sestavíme formulář, čímž se do kolonky detektiva opět načte aktivní uživatel
+    buildForm(category);
 }
 
 async function deleteRecord(id) {
