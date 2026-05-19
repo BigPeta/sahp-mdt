@@ -98,21 +98,25 @@ h2{
 
 <div class="sidebar">
 
-<h2>Přidat osobu</h2>
+<input type="text" id="caseNumber" placeholder="Spisové číslo">
 
-<input type="text" id="name" placeholder="Jméno">
+<input type="text" id="firstName" placeholder="Jméno">
 
-<textarea id="note" placeholder="Poznámka"></textarea>
+<input type="text" id="lastName" placeholder="Příjmení">
 
-<textarea id="crimes" placeholder="Skutky (oddělit čárkou)"></textarea>
+<input type="text" id="phone" placeholder="Telefon">
 
-<button onclick="addPerson()">Uložit osobu</button>
+<input type="text" id="license" placeholder="Licence">
 
-<hr style="margin:25px 0; border-color:#334155;">
+<input type="text" id="vehicles" placeholder="Vozidla">
 
-<h2>Vyhledávání</h2>
+<input type="text" id="photo" placeholder="Odkaz na fotku">
 
-<input type="text" id="search" class="search" placeholder="Hledat osobu..." onkeyup="renderPersons()">
+<input type="text" id="evidence" placeholder="Evidenční čísla důkazů">
+
+<textarea id="notes" placeholder="Poznámky"></textarea>
+
+<input type="text" id="investigator" placeholder="Vyšetřovatel">
 
 </div>
 
@@ -134,30 +138,28 @@ function saveData(){
     localStorage.setItem("persons", JSON.stringify(persons));
 }
 
-function addPerson(){
+async function addPerson(){
 
-    const name = document.getElementById("name").value;
-    const note = document.getElementById("note").value;
-    const crimes = document.getElementById("crimes").value
-        .split(",")
-        .map(c => c.trim())
-        .filter(c => c !== "");
+    const data = {
+        caseNumber: document.getElementById("caseNumber").value,
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        phone: document.getElementById("phone").value,
+        license: document.getElementById("license").value,
+        vehicles: document.getElementById("vehicles").value,
+        photo: document.getElementById("photo").value,
+        evidence: document.getElementById("evidence").value,
+        notes: document.getElementById("notes").value,
+        investigator: document.getElementById("investigator").value
+    };
 
-    if(!name) return alert("Zadej jméno");
-
-    persons.push({
-        id: Date.now(),
-        name,
-        note,
-        crimes
+    await fetch("SEM_DEJ_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify(data)
     });
 
-    saveData();
-    renderPersons();
+    alert("Spis uložen");
 
-    document.getElementById("name").value = "";
-    document.getElementById("note").value = "";
-    document.getElementById("crimes").value = "";
 }
 
 function deletePerson(id){
