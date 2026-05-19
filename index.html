@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SASP Terminal - MDT SECURE</title>
 <style>
     body { margin:0; font-family:Arial, sans-serif; background:#0b1119; color:white; overflow: hidden; }
@@ -44,7 +44,7 @@
     /* OBECNÉ ROZLOŽENÍ */
     .container { display:flex; flex: 1; overflow: hidden;}
     .sidebar { width:340px; background:#111827; padding:20px; border-right:2px solid #1e293b; overflow-y:auto; display: flex; flex-direction: column; flex-shrink: 0;}
-    .main { flex:1; padding:20px; overflow-y:auto; }
+    .main { flex:1; padding:20px; overflow-y:auto; position: relative;}
     
     /* DATABÁZE SPECIFICKÉ */
     .sidebar input, .sidebar select, .sidebar textarea { width:100%; margin-top:8px; padding:10px; border:1px solid #334155; border-radius:6px; background:#1e293b; color:white; box-sizing:border-box; }
@@ -67,7 +67,6 @@
     #mapImage { max-width: none; width: 100%; transition: transform 0.1s ease-out; transform-origin: top left; pointer-events: none;}
     .map-controls { position: absolute; bottom: 30px; right: 30px; display: flex; gap: 10px; background: rgba(17, 24, 39, 0.8); padding: 10px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10;}
     .map-btn { background: #3b82f6; color: white; border: none; width: 40px; height: 40px; border-radius: 6px; font-size: 20px; font-weight: bold; cursor: pointer; }
-    .map-btn:hover { background: #2563eb; }
 
     /* PŘEDTISKY */
     #templatesSection { display: none; flex: 1; overflow: hidden; }
@@ -76,39 +75,44 @@
     .inline-input { background: transparent; border: none; border-bottom: 1px solid #475569; color: #60a5fa; padding: 2px 5px; font-family: monospace; font-size: 14px;}
     .inline-input:focus { outline: none; border-bottom-color: #3b82f6; }
     .inline-textarea { width: 100%; margin-top: 5px; background: #0f1720; border: 1px solid #1e293b; color: #60a5fa; padding: 10px; border-radius: 4px; box-sizing: border-box; resize: vertical; font-family: monospace;}
-    .inline-textarea:focus { outline: none; border-color: #3b82f6; }
     .btn-copy { background: #10b981; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 14px;}
-    .btn-copy:hover { background: #059669; }
 
-    /* --- MOBILNÍ RESPONZIVITA (PRO TELEFONY A TABLETY) --- */
+    /* ZÁKONY (PDF) */
+    #pdfSection { display: none; flex: 1; overflow: hidden; }
+    .pdf-btn { background: #1e293b; border: 1px solid #3b82f6; color: white; padding: 12px; width: 100%; text-align: left; border-radius: 6px; cursor: pointer; margin-bottom: 10px; font-weight: bold;}
+    .pdf-btn:hover { background: #3b82f6; }
+    #pdfFrame { width: 100%; height: 100%; border: none; background: #fff; border-radius: 8px;}
+
+    /* --- MOBILNÍ RESPONZIVITA (PŘEPSÁNO PRO PERFEKTNÍ FUNGOVÁNÍ) --- */
     @media (max-width: 768px) {
-        body { overflow: auto; } /* Na mobilu dovolíme skrolovat celou stránku */
-        #mainApp { height: auto; min-height: 100vh; display: flex;}
-        .container { flex-direction: column; overflow: visible; height: auto;}
+        body { overflow-y: auto !important; }
+        #mainApp { height: auto !important; display: block !important; }
+        .container { flex-direction: column; display: flex; height: auto !important; overflow: visible !important; }
         
-        /* Změny v loginu */
+        /* Hlavička */
+        header { flex-direction: column; align-items: stretch; padding: 15px; }
+        .header-left { flex-direction: column; align-items: stretch; gap: 15px; }
+        .header-right { justify-content: space-between; margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 15px; }
+        .nav-tabs { flex-wrap: wrap; display: flex; gap: 5px; }
+        .nav-btn { flex: 1 1 calc(50% - 5px); margin: 0; padding: 10px; font-size: 12px;}
+
+        /* Sloupce - sidebar nahoru, obsah dolů */
+        .sidebar { width: 100% !important; max-width: 100% !important; border-right: none; border-bottom: 2px solid #334155; padding: 15px; height: auto; overflow: visible;}
+        .main { width: 100% !important; padding: 15px; overflow: visible;}
+
+        /* Login screen */
         .login-box { flex-direction: column; width: 90%; max-height: 95vh; overflow-y: auto; }
-        .login-left, .login-right { width: 100%; padding: 20px; box-sizing: border-box; }
+        .login-left, .login-right { width: 100%; }
         .login-left { border-right: none; border-bottom: 1px solid #1e293b; }
-        
-        /* Změny v hlavičce */
-        header { flex-direction: column; align-items: flex-start; gap: 15px; }
-        .header-left { flex-direction: column; align-items: flex-start; width: 100%; }
-        .header-right { width: 100%; justify-content: space-between; }
-        .nav-tabs { flex-wrap: wrap; width: 100%;}
-        .nav-btn { flex: 1; text-align: center; }
-        
-        /* Změny ve sloupcích (Sidebar bude nahoře, Výpis pod ním) */
-        .sidebar { width: 100%; border-right: none; border-bottom: 2px solid #1e293b; padding: 15px; box-sizing: border-box;}
-        .main { padding: 15px; }
 
-        /* Mapa pro mobil */
-        #mapSection { min-height: 60vh; }
+        /* Generátor formuláře - plná šířka na mobilu */
+        .inline-form-row { flex-direction: column; align-items: stretch; }
+        .inline-input { width: 100% !important; box-sizing: border-box; margin-bottom: 5px; }
+
+        /* Mapa a PDF - nastavení výšky aby se dalo listovat */
+        #mapSection { min-height: 60vh; display: flex !important; }
         .map-controls { bottom: 10px; right: 10px; }
-
-        /* Předtisky pro mobil */
-        .inline-form-row span { width: 100%; }
-        .inline-input { width: 100% !important; margin-bottom: 10px; }
+        #pdfSection .main { height: 75vh; }
     }
 </style>
 </head>
@@ -163,7 +167,8 @@
             <div class="nav-tabs">
                 <button class="nav-btn active" id="tab-db" onclick="switchTab('db')">📁 Databáze</button>
                 <button class="nav-btn" id="tab-map" onclick="switchTab('map')">🗺️ Mapa</button>
-                <button class="nav-btn" id="tab-tpl" onclick="switchTab('tpl')">📝 Generátor hlášení</button>
+                <button class="nav-btn" id="tab-tpl" onclick="switchTab('tpl')">📝 Hlášení</button>
+                <button class="nav-btn" id="tab-pdf" onclick="switchTab('pdf')">⚖️ Zákony</button>
             </div>
         </div>
         <div class="header-right">
@@ -202,12 +207,12 @@
         <div class="map-controls">
             <button class="map-btn" onclick="zoomMapBtn(0.2)">+</button>
             <button class="map-btn" onclick="zoomMapBtn(-0.2)">-</button>
-            <button class="map-btn" style="font-size: 14px;" onclick="resetMap()">Reset</button>
+            <button class="map-btn" style="font-size: 14px; width:auto; padding:0 10px;" onclick="resetMap()">Reset</button>
         </div>
     </div>
 
     <div id="templatesSection" class="container">
-        <div class="sidebar" style="max-width: 300px;">
+        <div class="sidebar">
             <h3 style="margin-bottom: 15px;">Dostupné předtisky</h3>
             <select id="templateSelector" style="width: 100%; padding: 10px; background: #0f1720; color:white; border:1px solid #3b82f6; border-radius:6px; font-weight: bold;" onchange="changeTemplate()">
                 <option value="nesouhlas">Nesouhlas s trestem</option>
@@ -222,6 +227,20 @@
                 </div>
         </div>
     </div>
+
+    <div id="pdfSection" class="container">
+        <div class="sidebar">
+            <h3 style="margin-bottom: 15px;">Seznam zákonů</h3>
+            <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/14-2001-Trestní%20zákoník%20a%20řád.pdf')">📄 Trestní zákoník a řád</button>
+            <p style="color:#64748b; font-size: 12px; margin-top: 20px;">
+                Vyberte zákon vlevo a otevře se přímo v prohlížeči.
+            </p>
+        </div>
+        <div class="main" style="padding: 0;">
+            <iframe id="pdfFrame" src="about:blank" width="100%" height="100%" style="border:none; border-radius: 8px; background: #1e293b;"></iframe>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -244,18 +263,27 @@ function switchTab(tabId) {
     document.getElementById('tab-db').classList.remove('active');
     document.getElementById('tab-map').classList.remove('active');
     document.getElementById('tab-tpl').classList.remove('active');
+    document.getElementById('tab-pdf').classList.remove('active');
+    
     document.getElementById('tab-' + tabId).classList.add('active');
 
     document.getElementById('databaseSection').style.display = 'none';
     document.getElementById('mapSection').style.display = 'none';
     document.getElementById('templatesSection').style.display = 'none';
+    document.getElementById('pdfSection').style.display = 'none';
 
     if (tabId === 'db') document.getElementById('databaseSection').style.display = 'flex';
-    if (tabId === 'map') document.getElementById('mapSection').style.display = 'flex';
+    if (tabId === 'map') document.getElementById('mapSection').style.display = 'block'; // Block je potřeba pro mapu kvůli výšce
     if (tabId === 'tpl') {
         document.getElementById('templatesSection').style.display = 'flex';
         changeTemplate(); 
     }
+    if (tabId === 'pdf') document.getElementById('pdfSection').style.display = 'flex';
+}
+
+// --- LOGIKA ZÁKONŮ (PDF) ---
+function loadPdf(url) {
+    document.getElementById('pdfFrame').src = url;
 }
 
 // --- POKROČILÁ LOGIKA MAPY (DRAG & ZOOM) ---
@@ -271,15 +299,14 @@ function setTransform() {
     mapImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
 }
 
-// Interakce Myší
 mapContainer.onmousedown = function (e) {
     e.preventDefault();
     panning = true;
     startX = e.clientX - pointX;
     startY = e.clientY - pointY;
 };
-mapContainer.onmouseup = function (e) { panning = false; };
-mapContainer.onmouseleave = function (e) { panning = false; };
+mapContainer.onmouseup = function () { panning = false; };
+mapContainer.onmouseleave = function () { panning = false; };
 mapContainer.onmousemove = function (e) {
     if (!panning) return;
     e.preventDefault();
@@ -288,7 +315,6 @@ mapContainer.onmousemove = function (e) {
     setTransform();
 };
 
-// Zoom kolečkem
 mapContainer.onwheel = function (e) {
     e.preventDefault();
     const xs = (e.clientX - pointX) / scale;
@@ -305,7 +331,6 @@ mapContainer.onwheel = function (e) {
     setTransform();
 };
 
-// Interakce dotykem pro mobil (posun prstem)
 mapContainer.ontouchstart = function(e) {
     if (e.touches.length === 1) {
         panning = true;
@@ -313,7 +338,7 @@ mapContainer.ontouchstart = function(e) {
         startY = e.touches[0].clientY - pointY;
     }
 };
-mapContainer.ontouchend = function(e) { panning = false; };
+mapContainer.ontouchend = function() { panning = false; };
 mapContainer.ontouchmove = function(e) {
     if (!panning) return;
     if (e.touches.length === 1) {
@@ -419,7 +444,6 @@ ${activeUser}`;
         alert("Chyba při kopírování: " + err);
     });
 }
-
 
 // --- AUTH LOGIKA ---
 function checkAuth() {
