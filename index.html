@@ -3,28 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Policejní Databáze - MDT PRO</title>
+<title>SASP Terminal - MDT</title>
 <style>
-    body { margin:0; font-family:Arial, sans-serif; background:#0f1720; color:white; }
-    header { background:#111827; padding:20px; font-size:24px; font-weight:bold; border-bottom:2px solid #1e293b; display: flex; justify-content: space-between; align-items: center;}
-    .container { display:flex; height:calc(100vh - 70px); }
+    body { margin:0; font-family:Arial, sans-serif; background:#0b1119; color:white; overflow: hidden; }
+    
+    /* --- LOGIN SCREEN STYLES --- */
+    #loginScreen { display: flex; width: 100vw; height: 100vh; align-items: center; justify-content: center; background: #0b1119; }
+    .login-box { display: flex; background: #111827; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; width: 750px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .login-left { width: 40%; background: #0d131c; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 1px solid #1e293b; }
+    .logo-circle { width: 80px; height: 80px; border: 2px solid #1d4ed8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #3b82f6; margin-bottom: 20px; box-shadow: 0 0 15px rgba(29, 78, 216, 0.3); }
+    .login-left h2 { margin: 0; font-size: 22px; color: #f8fafc; }
+    .login-left p { color: #64748b; font-size: 13px; margin: 10px 0 20px; line-height: 1.5; }
+    .badge { border: 1px solid #1e3a8a; color: #60a5fa; padding: 4px 12px; font-size: 10px; font-weight: bold; letter-spacing: 2px; border-radius: 4px; background: rgba(30, 58, 138, 0.2); }
+    
+    .login-right { width: 60%; padding: 40px; display: flex; flex-direction: column; justify-content: center;}
+    .login-right h3 { margin-top: 0; font-size: 11px; letter-spacing: 1.5px; color: #64748b; text-transform: uppercase; margin-bottom: 25px; }
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-size: 12px; color: #64748b; margin-bottom: 8px; }
+    .name-row { display: flex; gap: 10px; }
+    .login-right input, .login-right select { width: 100%; padding: 12px; background: #0f1720; border: 1px solid #1e293b; color: white; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+    .login-right select { appearance: none; cursor: pointer; }
+    .login-right input:focus, .login-right select:focus { outline: none; border-color: #3b82f6; }
+    .btn-login { background: #3b82f6; width: 100%; padding: 12px; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; transition: 0.2s;}
+    .btn-login:hover { background: #2563eb; }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; margin-top: 15px; font-size: 12px; color: #64748b; }
+    .checkbox-row input { width: 16px; height: 16px; margin: 0; cursor: pointer; }
+
+    /* --- MAIN APP STYLES --- */
+    #mainApp { display: none; flex-direction: column; height: 100vh; }
+    header { background:#111827; padding:15px 20px; font-size:20px; font-weight:bold; border-bottom:2px solid #1e293b; display: flex; justify-content: space-between; align-items: center;}
+    .header-left { display: flex; align-items: center; gap: 20px; }
+    .header-right { display: flex; align-items: center; gap: 15px; font-size: 14px; color: #94a3b8; }
+    .btn-logout { background: transparent; border: 1px solid #dc2626; color: #ef4444; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;}
+    .btn-logout:hover { background: #dc2626; color: white; }
+    .container { display:flex; flex: 1; overflow: hidden;}
     .sidebar { width:340px; background:#111827; padding:20px; border-right:2px solid #1e293b; overflow-y:auto; display: flex; flex-direction: column; }
     .main { flex:1; padding:20px; overflow-y:auto; }
-    input, select, textarea, button { width:100%; margin-top:8px; padding:10px; border:none; border-radius:6px; background:#1e293b; color:white; box-sizing:border-box; }
-    select { appearance: none; cursor: pointer; }
-    button { background:#2563eb; cursor:pointer; font-weight:bold; margin-top: 15px;}
-    button:hover { background:#1d4ed8; }
-    .btn-secondary { background: #475569; margin-top: 5px; }
-    .btn-secondary:hover { background: #334155; }
-    .btn-danger { background: #dc2626; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0; margin-left: 5px;}
-    .btn-danger:hover { background: #b91c1c; }
-    .btn-edit { background: #10b981; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0;}
-    .btn-edit:hover { background: #059669; }
-    .card { background:#1e293b; padding:15px; border-radius:8px; margin-top:15px; border-left: 4px solid #2563eb; position: relative;}
+    .sidebar input, .sidebar select, .sidebar textarea { width:100%; margin-top:8px; padding:10px; border:1px solid #334155; border-radius:6px; background:#1e293b; color:white; box-sizing:border-box; }
+    .sidebar button { background:#2563eb; width: 100%; padding: 12px; border:none; border-radius:6px; color:white; cursor:pointer; font-weight:bold; margin-top: 15px;}
+    .sidebar button:hover { background:#1d4ed8; }
+    .btn-secondary { background: #475569 !important; margin-top: 5px !important; }
+    .btn-secondary:hover { background: #334155 !important; }
+    .btn-danger { background: #dc2626; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0; margin-left: 5px; color:white; border:none; border-radius:4px; cursor:pointer;}
+    .btn-edit { background: #10b981; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0; color:white; border:none; border-radius:4px; cursor:pointer;}
+    .card { background:#1e293b; padding:15px; border-radius:8px; margin-top:15px; border-left: 4px solid #2563eb; }
     .card span.label { color: #94a3b8; font-size: 12px; font-weight: bold;}
     .card-actions { display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px;}
     .category-badge { float: right; color: #60a5fa; border: 1px solid #60a5fa; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase;}
-    .search-bar { margin-bottom: 20px; font-size: 16px; border: 2px solid #2563eb; background: #0f1720;}
+    .search-bar { margin-bottom: 20px; font-size: 16px; border: 2px solid #2563eb; background: #0f1720; width: 100%; padding: 12px; color:white; border-radius: 6px; box-sizing: border-box;}
     h3 { margin-top: 0; color: #60a5fa; }
     #loader { display: none; color: #fbbf24; font-size: 14px; margin-top: 10px; font-weight: bold; text-align: center;}
     .edit-mode { border: 2px solid #10b981 !important; background: #064e3b !important; }
@@ -32,36 +58,142 @@
 </head>
 <body>
 
-<header>
-    <span>MCD SYSTEM - Centrální Databáze</span>
-    <select id="categorySelector" style="width: 250px; margin: 0;" onchange="changeCategory()">
-        <option value="Osoby v pátrání">Osoby v pátrání</option>
-        <option value="Informatori">Informátoři</option>
-        <option value="Zadrzene osoby">Zadržené osoby</option>
-        <option value="Organizovane skupiny">Organizované skupiny</option>
-    </select>
-</header>
+<div id="loginScreen">
+    <div class="login-box">
+        <div class="login-left">
+            <div class="logo-circle">🛡️</div>
+            <h2>SASP Terminal</h2>
+            <p>Secure Document Terminal<br>San Andreas State Police</p>
+            <div class="badge">CLASSIFIED</div>
+        </div>
+        <div class="login-right">
+            <h3>Přihlášení do systému</h3>
+            
+            <div class="input-group">
+                <label>Hodnost</label>
+                <select id="loginRank">
+                    <option value="" disabled selected>— vyberte hodnost —</option>
+                    <option value="Staff">Staff</option>
+                    <option value="Lieutenant">Lieutenant</option>
+                    <option value="Detective III">Detective III</option>
+                    <option value="Detective II">Detective II</option>
+                    <option value="Detective I">Detective I</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Jméno a příjmení</label>
+                <div class="name-row">
+                    <input type="text" id="loginFName" placeholder="Jméno">
+                    <input type="text" id="loginLName" placeholder="Příjmení">
+                </div>
+            </div>
 
-<div class="container">
-    <div class="sidebar">
-        <h3 id="formTitle">Nový záznam</h3>
-        <div id="dynamicForm"></div>
-        <div id="loader">Komunikace s databází...</div>
-        
-        <button id="submitBtn" onclick="saveRecord()">Uložit záznam</button>
-        <button id="cancelEditBtn" class="btn-secondary" style="display:none;" onclick="cancelEdit()">Zrušit úpravu</button>
+            <button class="btn-login" onclick="performLogin()">Přihlásit se</button>
+
+            <div class="checkbox-row">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">Zapamatovat přihlášení</label>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="main">
-        <input type="text" id="search" class="search-bar" placeholder="Globální vyhledávání napříč databází (jméno, ID, SPZ, organizace...)" oninput="renderList()">
-        <div id="recordList"></div>
+<div id="mainApp">
+    <header>
+        <div class="header-left">
+            <span>SASP Terminal</span>
+            <select id="categorySelector" style="width: 200px; padding: 6px; background: #1e293b; color:white; border:none; border-radius:4px;" onchange="changeCategory()">
+                <option value="Osoby v pátrání">Osoby v pátrání</option>
+                <option value="Informatori">Informátoři</option>
+                <option value="Zadrzene osoby">Zadržené osoby</option>
+                <option value="Organizovane skupiny">Organizované skupiny</option>
+            </select>
+        </div>
+        <div class="header-right">
+            <span id="loggedInUser">Neznámý Uživatel</span>
+            <button class="btn-logout" onclick="logout()">Odhlásit</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            <h3 id="formTitle">Nový záznam</h3>
+            <div id="dynamicForm"></div>
+            <div id="loader">Komunikace s databází...</div>
+            
+            <button id="submitBtn" onclick="saveRecord()">Uložit záznam</button>
+            <button id="cancelEditBtn" class="btn-secondary" style="display:none;" onclick="cancelEdit()">Zrušit úpravu</button>
+        </div>
+
+        <div class="main">
+            <input type="text" id="search" class="search-bar" placeholder="Globální vyhledávání napříč databází..." oninput="renderList()">
+            <div id="recordList"></div>
+        </div>
     </div>
 </div>
 
 <script>
-// SEM VLOŽ SVŮJ ODKAZ (ujisti se, že jsi dal Novou verzi nasazení!)
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZMvhj37eowNY3aB0EdPFpt01vsL24MRBHfLrtjQhTJAth4N-n5poPVadUdXzi_FPq2Q/exec";
+// !!! SEM VLOŽ SVŮJ ODKAZ Z APPS SCRIPTU !!!
+const SCRIPT_URL = "https://script.google.com/macros/s/TADY_BUDE_TVUJ_KOD/exec";
 
+// --- LOGIN LOGIKA ---
+let activeUser = "";
+
+function checkAuth() {
+    // Zkusíme najít uživatele v lokální i dočasné paměti
+    activeUser = localStorage.getItem("mdt_user") || sessionStorage.getItem("mdt_user");
+    
+    if (activeUser) {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("mainApp").style.display = "flex";
+        document.getElementById("loggedInUser").innerText = "👤 " + activeUser;
+        
+        // Nastartování databáze až po přihlášení
+        changeCategory();
+    } else {
+        document.getElementById("loginScreen").style.display = "flex";
+        document.getElementById("mainApp").style.display = "none";
+    }
+}
+
+function performLogin() {
+    const rank = document.getElementById("loginRank").value;
+    const fName = document.getElementById("loginFName").value.trim();
+    const lName = document.getElementById("loginLName").value.trim();
+    const remember = document.getElementById("rememberMe").checked;
+
+    if (!rank || !fName || !lName) {
+        alert("Prosím vyplňte hodnost, jméno i příjmení.");
+        return;
+    }
+
+    const userInfo = `${rank} ${fName} ${lName}`;
+    
+    if (remember) {
+        localStorage.setItem("mdt_user", userInfo);
+    } else {
+        sessionStorage.setItem("mdt_user", userInfo);
+    }
+    
+    checkAuth();
+}
+
+function logout() {
+    localStorage.removeItem("mdt_user");
+    sessionStorage.removeItem("mdt_user");
+    // Vyčištění formuláře pro příští přihlášení
+    document.getElementById("loginRank").value = "";
+    document.getElementById("loginFName").value = "";
+    document.getElementById("loginLName").value = "";
+    checkAuth();
+}
+
+// Spustit ověření ihned po načtení
+window.onload = checkAuth;
+
+
+// --- DATABÁZOVÁ LOGIKA (Z PŘEDCHOZÍ VERZE) ---
 const formSchemas = {
     "Osoby v pátrání": [
         { id: "Jméno", type: "text", placeholder: "Jméno" },
@@ -106,7 +238,6 @@ const formSchemas = {
 let currentData = []; 
 let editingId = null; 
 
-// Vykreslení formuláře podle kategorie
 function buildForm(category) {
     const schema = formSchemas[category];
     const formDiv = document.getElementById("dynamicForm");
@@ -137,7 +268,6 @@ function buildForm(category) {
 function changeCategory() {
     if (editingId) {
         if (!confirm("Máš rozepsanou úpravu záznamu. Chceš ji zahodit?")) {
-            // Vrátíme select zpět na kategorii upravovaného záznamu
             const record = currentData.find(r => r.ID === editingId);
             if (record) document.getElementById("categorySelector").value = record._Kategorie;
             return;
@@ -148,10 +278,9 @@ function changeCategory() {
     const category = document.getElementById("categorySelector").value;
     document.getElementById("formTitle").innerText = "Nový záznam: " + category;
     buildForm(category);
-    renderList(); 
+    loadData(); 
 }
 
-// Stažení VŠECH dat ze VŠECH listů naráz
 async function loadData() {
     document.getElementById("loader").style.display = "block";
     try {
@@ -159,7 +288,7 @@ async function loadData() {
         currentData = await res.json();
         renderList();
     } catch (e) {
-        alert("Chyba při stahování dat ze serveru.");
+        console.log(e);
     }
     document.getElementById("loader").style.display = "none";
 }
@@ -186,15 +315,14 @@ async function saveRecord() {
     try {
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
-        
         if (result.status === "success") {
             cancelEdit();
-            await loadData(); // Znovu načteme aktuální data z DB
+            await loadData();
         } else {
             alert("Chyba z databáze: " + result.message);
         }
     } catch (e) {
-        alert("Chyba při odesílání požadavku!");
+        alert("Chyba při ukládání!");
     }
     document.getElementById("loader").style.display = "none";
 }
@@ -204,12 +332,10 @@ function startEdit(id) {
     if (!record) return;
 
     editingId = id;
-    
-    // Automaticky přepne levý formulář do kategorie, ze které záznam pochází
     document.getElementById("categorySelector").value = record._Kategorie;
     buildForm(record._Kategorie);
 
-    document.getElementById("formTitle").innerText = "Úprava záznamu: " + id;
+    document.getElementById("formTitle").innerText = "Úprava: " + id;
     document.getElementById("submitBtn").innerText = "Uložit změny";
     document.getElementById("submitBtn").classList.add("edit-mode");
     document.getElementById("cancelEditBtn").style.display = "block";
@@ -220,8 +346,6 @@ function startEdit(id) {
             document.getElementById(field.id).value = record[field.id] || "";
         }
     });
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function cancelEdit() {
@@ -241,19 +365,12 @@ function cancelEdit() {
 }
 
 async function deleteRecord(id) {
-    if (!confirm(`Opravdu si přeješ TRVALE SMAZAT záznam ${id}?`)) return;
-    
+    if (!confirm(`Opravdu smazat záznam ${id}?`)) return;
     const record = currentData.find(r => r.ID === id);
     if(!record) return;
 
     document.getElementById("loader").style.display = "block";
-
-    const payload = {
-        sheetName: record._Kategorie,
-        action: "delete",
-        id: id,
-        rowData: []
-    };
+    const payload = { sheetName: record._Kategorie, action: "delete", id: id, rowData: [] };
 
     try {
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
@@ -261,34 +378,23 @@ async function deleteRecord(id) {
         if (result.status === "success") {
             if (editingId === id) cancelEdit();
             await loadData();
-        } else {
-            alert("Chyba při mazání: " + result.message);
         }
     } catch(e) {
-        alert("Chyba sítě při mazání záznamu.");
+        alert("Chyba při mazání.");
     }
     document.getElementById("loader").style.display = "none";
 }
 
 function renderList() {
-    const search = document.getElementById("search").value.toLowerCase();
+    const removeDiacritics = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const search = removeDiacritics(document.getElementById("search").value.toLowerCase());
     const currentCategory = document.getElementById("categorySelector").value;
     const listDiv = document.getElementById("recordList");
     listDiv.innerHTML = "";
 
-    let filteredData = [];
-
-    // Logika chytrého vyhledávání
-    if (search.trim() === "") {
-        // Vyhledávání je prázdné = ukaž jen aktuální kategorii
-        filteredData = currentData.filter(row => row._Kategorie === currentCategory);
-    } else {
-        // Uživatel něco hledá = prohledej ÚPLNĚ VŠECHNO
-        filteredData = currentData.filter(row => {
-            const rowText = Object.values(row).join(" ").toLowerCase();
-            return rowText.includes(search);
-        });
-    }
+    let filteredData = search.trim() === "" 
+        ? currentData.filter(row => row._Kategorie === currentCategory)
+        : currentData.filter(row => removeDiacritics(Object.values(row).join(" ").toLowerCase()).includes(search));
 
     if (filteredData.length === 0) {
         listDiv.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Žádné záznamy nebyly nalezeny.</p>";
@@ -298,8 +404,6 @@ function renderList() {
     filteredData.forEach(row => {
         const card = document.createElement("div");
         card.className = "card";
-        
-        // Hlavička karty s ID a štítkem kategorie
         let html = `<b>ID: ${row.ID}</b> <span class="category-badge">${row._Kategorie}</span><br><br>`;
         
         for (let key in row) {
@@ -311,24 +415,16 @@ function renderList() {
                 }
             }
         }
-
         html += `
             <div class="card-actions">
                 <button class="btn-edit" onclick="startEdit('${row.ID}')">✏️ Upravit</button>
                 <button class="btn-danger" onclick="deleteRecord('${row.ID}')">🗑️ Smazat</button>
             </div>
         `;
-        
         card.innerHTML = html;
         listDiv.appendChild(card);
     });
 }
-
-// Při prvním načtení stáhneme data a sestavíme výchozí formulář
-window.onload = () => {
-    buildForm(document.getElementById("categorySelector").value);
-    loadData();
-};
 </script>
 </body>
 </html>
