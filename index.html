@@ -851,21 +851,38 @@ function renderList() {
     const listDiv = document.getElementById("recordList");
     listDiv.innerHTML = "";
 
-    const activeUserStr = activeCreds.rank + " " + activeCreds.fName + " " + activeCreds.lName;
-    const isHighCommand = activeCreds.rank === "Staff" || activeCreds.rank === "Lieutenant";
-    const isCSI = activeCreds.rank === "CSI";
+    // Tady uvidíme, jestli vůbec nějaká data v paměti máme
+    console.log("Aktuální data v paměti:", currentData);
 
-    let filteredData = [];
-    if (searchString.trim() === "") {
-        filteredData = currentData.filter(row => row._Kategorie === currentCategory);
-    } else {
-        filteredData = currentData.filter(row => {
-            if ((row._Kategorie === "Logy" || row._Kategorie === "Archiv smazanych") && 
-                (currentCategory !== "Logy" && currentCategory !== "Archiv smazanych")) return false; 
-            return removeDiacritics(Object.values(row).join(" ").toLowerCase()).includes(searchString);
-        });
+    let filteredData = currentData.filter(row => {
+        // Kontrola kategorie
+        if (row._Kategorie !== currentCategory) return false;
+        
+        // Hledání v celém objektu (včetně všech klíčů)
+        const rowString = Object.values(row).join(" ").toLowerCase();
+        return removeDiacritics(rowString).includes(searchString);
+    });
+
+    if (filteredData.length === 0) {
+        listDiv.innerHTML = "<p style='text-align:center;'>Nenalezeno. Zkus refresh (⟳).</p>";
+        return;
     }
 
+    filteredData.forEach(row => {
+        const card = document.createElement("div");
+        card.className = "card";
+        
+        // Dynamický výpis obsahu
+        let html = `<b>ID: ${row.ID || "N/A"}</b><br>`;
+        for (let key in row) {
+            if (key !== "ID" && key !== "_Kategorie" && row[key]) {
+                html += `<div><span class="label">${key}:</span> ${row[key]}</div>`;
+            }
+        }
+        card.innerHTML = html;
+        listDiv.appendChild(card);
+    });
+}
     if (filteredData.length === 0) { 
         listDiv.innerHTML = "<p style='text-align:center;'>Nebyly nalezeny žádné záznamy.</p>"; 
         return; 
