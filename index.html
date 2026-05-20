@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MCD Terminal - MDT SECURE</title>
+<title>SASP Terminal - MDT SECURE</title>
 <style>
     body { margin:0; font-family:Arial, sans-serif; background:#0b1119; color:white; overflow: hidden; }
     
@@ -56,7 +56,7 @@
     .card span.label { color: #94a3b8; font-size: 12px; font-weight: bold;}
     .card-actions { display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px; flex-wrap: wrap; gap: 5px;}
     .category-badge { float: right; color: #60a5fa; border: 1px solid #60a5fa; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase;}
-    .search-bar { margin-bottom: 20px; font-size: 16px; border: 2px solid #2563eb; background: #0f1720; width: 100%; padding: 12px; color:white; border-radius: 6px; box-sizing: border-box;}
+    .search-bar { font-size: 16px; border: 2px solid #2563eb; background: #0f1720; width: 100%; padding: 12px; color:white; border-radius: 6px; box-sizing: border-box;}
     h3 { margin-top: 0; color: #60a5fa; }
     #loader { display: none; color: #fbbf24; font-size: 14px; margin-top: 10px; font-weight: bold; text-align: center;}
 
@@ -110,7 +110,7 @@
         .inline-input { width: 100% !important; box-sizing: border-box; margin-bottom: 5px; }
 
         /* Mapa a PDF - nastavení výšky OPRAVA */
-        #mapSection { min-height: 60vh; } /* Zde bylo smazáno "display: flex !important;", které blokovalo skrývání */
+        #mapSection { min-height: 60vh; }
         .map-controls { bottom: 10px; right: 10px; }
         #pdfSection .main { height: 75vh; }
     }
@@ -122,9 +122,9 @@
     <div class="login-box">
         <div class="login-left">
             <div class="logo-circle">🛡️</div>
-            <h2>MCD Terminal</h2>
+            <h2>SASP Terminal</h2>
             <p>Secure Document Terminal<br>San Andreas State Police</p>
-            <div class="badge">TAJNÉ</div>
+            <div class="badge">CLASSIFIED</div>
         </div>
         <div class="login-right">
             <h3>Přihlášení do systému</h3>
@@ -163,7 +163,7 @@
 <div id="mainApp">
     <header>
         <div class="header-left">
-            <span class="app-title">MCD Terminal</span>
+            <span class="app-title">SASP Terminal</span>
             <div class="nav-tabs">
                 <button class="nav-btn active" id="tab-db" onclick="switchTab('db')">📁 Databáze</button>
                 <button class="nav-btn" id="tab-map" onclick="switchTab('map')">🗺️ Mapa</button>
@@ -194,7 +194,10 @@
         </div>
 
         <div class="main">
-            <input type="text" id="search" class="search-bar" placeholder="Globální vyhledávání napříč databází..." oninput="renderList()">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="search" class="search-bar" style="margin-bottom: 0;" placeholder="Globální vyhledávání napříč databází..." oninput="renderList()">
+                <button onclick="loadData()" style="background: #334155; border: 1px solid #475569; border-radius: 6px; padding: 0 15px; color: white; cursor: pointer; font-weight: bold; transition: 0.2s;" onmouseover="this.style.background='#475569'" onmouseout="this.style.background='#334155'" title="Stáhnout aktuální data ze serveru">⟳ Obnovit</button>
+            </div>
             <div id="recordList"></div>
         </div>
     </div>
@@ -479,7 +482,8 @@ function checkAuth() {
             categorySelector.innerHTML += `<option id="optArchiv" value="Archiv smazanych" class="admin-category">[ADMIN] Archiv smazaných</option>`;
             categorySelector.innerHTML += `<option id="optLogy" value="Logy" class="admin-category">[ADMIN] Systémové logy</option>`;
         }
-        changeCategory();
+        changeCategory(); // Jen nastaví formulář
+        loadData();       // STÁHNE DATA Z GOOGLU JEN JEDNOU PŘI PŘIHLÁŠENÍ!
     } else {
         document.getElementById("loginScreen").style.display = "flex";
         document.getElementById("mainApp").style.display = "none";
@@ -621,7 +625,9 @@ function changeCategory() {
     const category = document.getElementById("categorySelector").value;
     document.getElementById("formTitle").innerText = "Záznam: " + category;
     buildForm(category);
-    loadData(); 
+    
+    // OPTIMALIZACE: Neposílat požadavek na Google, jen překreslit lokální data!
+    renderList(); 
 }
 
 async function loadData() {
@@ -647,7 +653,7 @@ async function saveRecord() {
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
         if (result.status === "success") {
-            cancelEdit(); await loadData();
+            cancelEdit(); await loadData(); // Aktualizace po uložení
         } else alert("Chyba: " + result.message);
     } catch (e) { alert("Chyba při ukládání!"); }
     document.getElementById("loader").style.display = "none";
@@ -691,7 +697,7 @@ async function deleteRecord(id) {
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
         if (result.status === "success") {
-            if (editingId === id) cancelEdit(); await loadData();
+            if (editingId === id) cancelEdit(); await loadData(); // Aktualizace po smazání
         }
     } catch(e) { alert("Chyba při mazání."); }
     document.getElementById("loader").style.display = "none";
