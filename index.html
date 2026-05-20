@@ -36,7 +36,6 @@
     header { background:#111827; padding:10px 20px; font-weight:bold; border-bottom:2px solid #1e293b; display: flex; justify-content: space-between; align-items: center;}
     .header-left { display: flex; align-items: center; gap: 20px; }
     .app-title { font-size: 20px; margin-right: 15px;}
-    
     .nav-tabs { display: flex; gap: 10px; }
     .nav-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s; }
     .nav-btn:hover { background: #334155; color: white; }
@@ -44,17 +43,16 @@
     .header-right { display: flex; align-items: center; gap: 15px; font-size: 14px; color: #94a3b8; }
     .btn-logout { background: transparent; border: 1px solid #dc2626; color: #ef4444; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;}
 
-    /* --- DATABÁZE --- */
+    /* --- DATABÁZE A FORMULÁŘE --- */
     .container { display:flex; flex: 1; overflow: hidden;}
     .sidebar { width:340px; background:#111827; padding:20px; border-right:2px solid #1e293b; overflow-y:auto; display: flex; flex-direction: column; flex-shrink: 0;}
-    .main { flex:1; padding:20px; overflow-y:auto; position: relative;}
+    .main { flex:1; padding:20px; overflow-y:auto; position: relative; background: #0b1119;}
     
     .sidebar input, .sidebar select, .sidebar textarea { width:100%; margin-top:8px; padding:10px; border:1px solid #334155; border-radius:6px; background:#1e293b; color:white; box-sizing:border-box; font-family: sans-serif;}
     .sidebar textarea { resize: vertical; min-height: 80px; }
     .sidebar button { background:#2563eb; width: 100%; padding: 12px; border:none; border-radius:6px; color:white; cursor:pointer; font-weight:bold; margin-top: 15px;}
     .btn-secondary { background: #475569 !important; margin-top: 5px !important; }
     
-    /* Karty ve výpisu */
     .card { background:#1e293b; padding:15px; border-radius:8px; margin-top:15px; border-left: 4px solid #2563eb; word-wrap: break-word;}
     .card span.label { color: #94a3b8; font-size: 12px; font-weight: bold;}
     .card-actions { display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px; flex-wrap: wrap; gap: 5px;}
@@ -62,18 +60,16 @@
     .search-bar { font-size: 16px; border: 2px solid #2563eb; background: #0f1720; width: 100%; padding: 12px; color:white; border-radius: 6px; box-sizing: border-box;}
     #loader { display: none; color: #fbbf24; font-size: 14px; margin-top: 10px; font-weight: bold; text-align: center;}
 
-    /* Speciální tlačítka */
     .btn-danger { background: #dc2626; padding: 6px 12px; font-size: 12px; color:white; border:none; border-radius:4px; cursor:pointer;}
     .btn-edit { background: #10b981; padding: 6px 12px; font-size: 12px; color:white; border:none; border-radius:4px; cursor:pointer;}
     .btn-folder { background: #f59e0b; padding: 6px 12px; font-size: 12px; color:black; font-weight:bold; border:none; border-radius:4px; cursor:pointer;}
     
-    /* ŠTÍTKY (TAGY) */
     .tag { padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px; margin-top: 5px; display: inline-block;}
     .tag-wanted { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
     .tag-informant { background: #064e3b; color: #6ee7b7; border: 1px solid #10b981; }
     .tag-case { background: #451a03; color: #fcd34d; border: 1px solid #f59e0b; }
 
-    /* --- KARTA OSOBY (MODAL/POPUP) --- */
+    /* --- KARTA OSOBY (MODAL) --- */
     #personModal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
     .modal-content { background: #0f1720; width: 90%; max-width: 800px; max-height: 90vh; border-radius: 10px; border: 1px solid #334155; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8);}
     .modal-header { background: #111827; padding: 15px 20px; border-bottom: 2px solid #1e293b; display: flex; justify-content: space-between; align-items: center;}
@@ -91,6 +87,7 @@
     .history-item { background: #1e293b; padding: 10px; margin-bottom: 10px; border-radius: 6px; font-size: 13px; border-left: 3px solid #64748b;}
     .history-item.zatykac { border-left-color: #ef4444; }
     .history-item.spis { border-left-color: #f59e0b; }
+    .history-item.informant { border-left-color: #10b981; }
 
     /* --- OSTATNÍ ZÁLOŽKY --- */
     #mapSection { display: none; flex: 1; position: relative; background: #000; overflow: hidden; }
@@ -101,11 +98,28 @@
     .map-btn { background: #3b82f6; color: white; border: none; width: 40px; height: 40px; border-radius: 6px; font-size: 20px; font-weight: bold; cursor: pointer; }
 
     #templatesSection { display: none; flex: 1; overflow: hidden; }
+    
+    /* Vzhled generátoru hlášení (Dle dodaného obrázku) */
+    .template-builder { background: #0f1720; padding: 25px; border: 1px solid #1e293b; font-size: 13px; line-height: 2.0; color: #94a3b8; border-radius: 4px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);}
+    .inline-form-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+    .inline-input { background: transparent; border: none; border-bottom: 1px solid #334155; color: #60a5fa; padding: 2px 5px; font-family: monospace; font-size: 13px; transition: border-color 0.2s;}
+    .inline-input:focus { outline: none; border-bottom-color: #3b82f6; }
+    .inline-input::placeholder { color: #334155; font-style: italic; }
+    
+    .textarea-label { color: #cbd5e1; font-size: 13px; font-weight: bold; margin-top: 15px; display: block; margin-bottom: 5px;}
+    .inline-textarea { width: 100%; background: #0b1119; border: 1px solid #1e293b; color: #60a5fa; padding: 10px; box-sizing: border-box; resize: vertical; font-family: monospace; min-height: 80px;}
+    .inline-textarea:focus { outline: none; border-color: #3b82f6; }
+    .inline-textarea::placeholder { color: #334155; font-style: italic; }
+    
+    .btn-copy { background: #10b981; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 25px; font-size: 14px;}
+    .btn-copy:hover { background: #059669; }
+
+    /* Zákony v PDF */
     #pdfSection { display: none; flex: 1; overflow: hidden; }
-    .pdf-btn { background: #1e293b; border: 1px solid #3b82f6; color: #cbd5e1; padding: 8px 12px; width: 100%; text-align: left; border-radius: 6px; cursor: pointer; margin-bottom: 5px; font-size: 12px; font-weight: bold;}
+    .pdf-btn { background: #1e293b; border: 1px solid #3b82f6; color: #cbd5e1; padding: 8px 12px; width: 100%; text-align: left; border-radius: 6px; cursor: pointer; margin-bottom: 5px; font-size: 12px; font-weight: bold; transition: 0.2s;}
     .pdf-btn:hover { background: #3b82f6; color: white; }
 
-    /* --- MOBILNÍ RESPONZIVITA --- */
+    /* --- MOBIL --- */
     @media (max-width: 768px) {
         body { overflow-y: auto !important; }
         #mainApp { height: auto !important; } 
@@ -119,7 +133,11 @@
         .main { width: 100% !important; padding: 15px; overflow: visible;}
         .login-box { flex-direction: column; width: 90%; max-height: 95vh; overflow-y: auto; }
         .login-left, .login-right { width: 100%; }
+        .inline-form-row { flex-direction: column; align-items: stretch; }
+        .inline-input { width: 100% !important; box-sizing: border-box; margin-bottom: 5px; }
         .person-header { flex-direction: column; align-items: center; text-align: center; }
+        #mapSection { min-height: 60vh; }
+        #pdfSection .main { height: 75vh; }
     }
 </style>
 </head>
@@ -162,12 +180,10 @@
                 </div>
             </div>
             <button class="btn-login" onclick="performLogin()">Ověřit u serveru a přihlásit</button>
-            
             <div class="checkbox-row">
                 <input type="checkbox" id="rememberMe">
                 <label for="rememberMe">Zapamatovat přihlášení</label>
             </div>
-            
         </div>
     </div>
 </div>
@@ -193,8 +209,10 @@
         <div class="sidebar">
             <select id="categorySelector" style="width: 100%; margin-bottom: 15px; padding: 10px; background: #0f1720; color:white; border:1px solid #3b82f6; border-radius:6px; font-weight: bold;" onchange="changeCategory()">
                 <option value="Osoby">Osoby (Centrální evidence)</option>
-                <option value="Zaznamy">Nová Událost / Záznam k osobě</option>
-                <option value="Spisy">Velké Spisy (Cases)</option>
+                <option value="Zadrzene osoby">Zapsat: Zadržení / Výslech</option>
+                <option value="Osoby v patrani">Vyhlásit: Pátrání / Zatykač</option>
+                <option value="Informatori">Zaregistrovat: Informátor</option>
+                <option value="Spisy">Velké Spisy (Vyšetřování)</option>
                 <option value="Organizace">Organizované skupiny</option>
             </select>
             <h3 id="formTitle">Záznam</h3>
@@ -208,7 +226,7 @@
         <div class="main">
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <input type="text" id="search" class="search-bar" style="margin-bottom: 0;" placeholder="Hledat jméno, SPZ, číslo spisu..." oninput="renderList()">
-                <button onclick="loadData()" style="background: #334155; border: 1px solid #475569; border-radius: 6px; padding: 0 15px; color: white; cursor: pointer; font-weight: bold; transition: 0.2s;" onmouseover="this.style.background='#475569'" onmouseout="this.style.background='#334155'">⟳ Obnovit</button>
+                <button onclick="loadData()" style="background: #334155; border: 1px solid #475569; border-radius: 6px; padding: 0 15px; color: white; cursor: pointer; font-weight: bold; transition: 0.2s;" title="Aktualizovat data ze serveru">⟳ Obnovit</button>
             </div>
             <div id="recordList"></div>
         </div>
@@ -240,25 +258,46 @@
         <div class="sidebar">
             <h3 style="margin-bottom: 15px;">Dostupné předtisky</h3>
             <select id="templateSelector" style="width: 100%; padding: 10px; background: #0f1720; color:white; border:1px solid #3b82f6; border-radius:6px; font-weight: bold;"><option value="nesouhlas">Nesouhlas s trestem</option></select>
+            <p style="color:#64748b; font-size: 12px; margin-top: 20px;">
+                Vyplňte formulář vpravo. Políčka se dynamicky dosadí do textu zprávy. Následně klikněte na tlačítko Zkopírovat hlášení dole.
+            </p>
         </div>
-        <div class="main"><div id="activeTemplateArea" class="template-builder">Místo pro generátor...</div></div>
+        <div class="main"><div id="activeTemplateArea" class="template-builder"></div></div>
     </div>
 
     <div id="pdfSection" class="container">
         <div class="sidebar">
             <h3 style="margin-bottom: 15px; color:#f8fafc;">Zákony</h3>
-            <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/14-2001-Trestní%20zákoník%20a%20řád.pdf')">📄 Trestní zákoník a řád</button>
+            <div style="display: flex; flex-direction: column; gap: 4px; overflow-y: auto; max-height: 70vh; padding-right: 5px;">
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/1-2001-Ústava%20San%20Andreaské%20republiky.pdf')">📄 Ústava San Andreaské republiky</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/2-2001-Listina%20základních%20práv%20a%20svobod.pdf')">📄 Listina základních práv a svobod</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/3-2001-Zákon%20o%20soudech%20a%20úřadu%20státního%20návladního.pdf')">📄 Zákon o soudech a státním návladním</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/4-2001-Zákon%20o%20služebním%20poměru%20příslušníků%20bezpečnostních%20sborů.pdf')">📄 Služební poměr bezp. sborů</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/5-2026-Občanský%20zákoník.pdf')">📄 Občanský zákoník</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/6-2026-Zákon%20o%20zbraních%20a%20střelivu.pdf')">📄 Zákon o zbraních a střelivu</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/7-2001-Zákon%20o%20Los%20Santos%20Fire%20Department.pdf')">📄 Zákon o LSFD</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/8-2001-Zákon%20o%20správě%20San%20Andreas%20Medical%20Services%20a%20zdravotní%20péče%20občanům%20státu%20San%20Andreas.pdf')">📄 Zákon o SAMS a zdravotní péči</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/9-2001-Zákon%20o%20námořní%20bezpečnosti.pdf')">📄 Zákon o námořní bezpečnosti</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/10-2001-Zákon%20o%20letectví%20a%20vzdušném%20prostoru.pdf')">📄 Zákon o letectví a vzdušném prostoru</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/11-2001-Zákon%20o%20podnikání%20v%20soukromém%20a%20veřejném%20právu.pdf')">📄 Zákon o podnikání</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/12-2001-Zákon%20o%20advokacii.pdf')">📄 Zákon o advokacii</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/13-2001-Zákon%20o%20bezpečnosti%20a%20provozu%20na%20pozemních%20komunikacích.pdf')">📄 Silniční provoz na komunikacích</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/14-2001-Trestní%20zákoník%20a%20řád.pdf')">📄 Trestní zákoník a řád</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/15-2001-Zákon%20o%20Los%20Santos%20Police%20Department.pdf')">📄 Zákon o LSPD</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/16-2001-Zákon%20o%20Los%20Santos%20Sheriff%27s%20Department.pdf')">📄 Zákon o LSSD</button>
+                <button class="pdf-btn" onclick="loadPdf('https://www.enjoyrp.cz/zakonnik/17-2001-Zákon%20o%20omamných%20a%20psychotropních%20látkách.pdf')">📄 O omamných a psychotropních látkách</button>
             </div>
+        </div>
         <div class="main" style="padding: 0;"><iframe id="pdfFrame" src="about:blank" width="100%" height="100%" style="border:none; border-radius: 8px; background: #1e293b;"></iframe></div>
     </div>
 
 </div>
 
 <script>
-// !!! SEM VLOŽ SVŮJ ODKAZ Z APPS SCRIPTU !!!
+// !!! TADY VLOŽ SVŮJ NOVÝ ODKAZ !!!
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzW5KnDtBZqSdHKkRN8J-0JhOUy0mV5g2qlfltjJImr6i5uATuZtJHOhZMK8et-fzdNjQ/exec";
 
-// Nové rozložení formulářů (Schémata)
+// --- NOVÁ SCHÉMATA PRO SPECIFICKÉ FORMULÁŘE ---
 const formSchemas = {
     "Osoby": [
         { id: "Jméno", type: "text", placeholder: "Jméno (povinné)" },
@@ -269,15 +308,39 @@ const formSchemas = {
         { id: "Vozidla", type: "text", placeholder: "SPZ / Typ vozidla" },
         { id: "Fotka", type: "text", placeholder: "URL odkaz na fotku osoby" }
     ],
-    "Zaznamy": [
-        { id: "Typ záznamu", type: "select", options: ["Zadržení", "Zatykač (Hledaný)", "Registrace Informátora", "Výslech", "Jiný záznam"] },
-        { id: "Jméno a Příjmení", type: "text", placeholder: "Jan Novák (Musí se shodovat s evidencí)" },
-        { id: "Datum narození", type: "text", placeholder: "DD.MM.RRRR (Pro přesnou identifikaci)" },
-        { id: "Tresty/Důvod", type: "text", placeholder: "Za co je zadržen / Hledán" },
-        { id: "Důkazy", type: "text", placeholder: "Čísla důkazů" },
-        { id: "Poznámky/Výslech", type: "textarea", placeholder: "Průběh výslechu, detaily zadržení..." },
-        { id: "Detektiv", type: "text", placeholder: "Vyšetřovatel" },
-        { id: "Datum vytvoření", type: "text", placeholder: "Generuje se automaticky..." }
+    "Zadrzene osoby": [
+        { id: "Jméno", type: "text", placeholder: "Jméno (povinné)" },
+        { id: "Příjmení", type: "text", placeholder: "Příjmení (povinné)" },
+        { id: "Datum narození", type: "text", placeholder: "DD.MM.RRRR (povinné)" },
+        { id: "Fotka", type: "text", placeholder: "URL fotky z místa činu" },
+        { id: "Tresty", type: "text", placeholder: "Tresty / Důvody zadržení" },
+        { id: "Důkazy", type: "text", placeholder: "Důkazy (číslo důkazu)" },
+        { id: "Poznámky", type: "textarea", placeholder: "Poznámky k zadržení / Výslech" },
+        { id: "Detektiv", type: "text", placeholder: "Vyšetřoval" },
+        { id: "Datum", type: "text", placeholder: "Generuje se automaticky..." }
+    ],
+    "Osoby v patrani": [
+        { id: "Jméno", type: "text", placeholder: "Jméno (povinné)" },
+        { id: "Příjmení", type: "text", placeholder: "Příjmení (povinné)" },
+        { id: "Datum narození", type: "text", placeholder: "DD.MM.RRRR (povinné)" },
+        { id: "Důvod zatykače", type: "text", placeholder: "Za co je hledán" },
+        { id: "Status", type: "select", options: ["Neozbrojen", "Neznámo", "Nebezpečný"] },
+        { id: "Stav pátrání", type: "select", options: ["Aktivní", "Pozastaveno", "Dopaden"] },
+        { id: "Oblast výskytu", type: "text", placeholder: "Oblast výskytu" },
+        { id: "Detektiv", type: "text", placeholder: "Vyhlásil" },
+        { id: "Datum", type: "text", placeholder: "Generuje se automaticky..." }
+    ],
+    "Informatori": [
+        { id: "Krycí jméno", type: "text", placeholder: "Krycí jméno (přezdívka)" },
+        { id: "Skutečné Jméno", type: "text", placeholder: "Skutečné Jméno (povinné)" },
+        { id: "Skutečné Příjmení", type: "text", placeholder: "Skutečné Příjmení (povinné)" },
+        { id: "Datum narození", type: "text", placeholder: "DD.MM.RRRR (povinné)" },
+        { id: "Telefon", type: "text", placeholder: "Telefonní číslo" },
+        { id: "Zaměstnání", type: "text", placeholder: "Zaměstnání / Frakce" },
+        { id: "Status odměny", type: "select", options: ["Placený", "Neplacený"] },
+        { id: "Stav informátora", type: "select", options: ["Aktivní", "Neaktivní", "Prozrazen", "Mrtvý"] },
+        { id: "Detektiv", type: "text", placeholder: "Odpovědný detektiv" },
+        { id: "Datum", type: "text", placeholder: "Generuje se automaticky..." }
     ],
     "Spisy": [
         { id: "Název Spisu", type: "text", placeholder: "Např. SPIS-BAHAMA" },
@@ -285,7 +348,7 @@ const formSchemas = {
         { id: "Sledovaná vozidla", type: "text", placeholder: "SPZ sledovaných aut" },
         { id: "Obsah a poznámky", type: "textarea", placeholder: "Průběžné poznámky z vyšetřování..." },
         { id: "Založil detektiv", type: "text", placeholder: "Detektiv" },
-        { id: "Datum založení", type: "text", placeholder: "Generuje se automaticky..." }
+        { id: "Datum", type: "text", placeholder: "Generuje se automaticky..." }
     ],
     "Organizace": [
         { id: "Název organizace", type: "text", placeholder: "Název" },
@@ -299,12 +362,12 @@ const formSchemas = {
 
 let currentData = []; 
 let editingId = null; 
-let activeCreds = null; 
+let activeCreds = null;
 
-// --- UTILS ---
+// --- POMOCNÉ FUNKCE ---
 function togglePassword() {
-    const pwdInput = document.getElementById("loginPassword");
-    pwdInput.type = pwdInput.type === "password" ? "text" : "password";
+    const p = document.getElementById("loginPassword");
+    p.type = p.type === "password" ? "text" : "password";
 }
 
 function removeDiacritics(str) {
@@ -313,11 +376,10 @@ function removeDiacritics(str) {
 }
 
 function getTodayDate() {
-    const today = new Date();
-    return today.toLocaleDateString("cs-CZ");
+    return new Date().toLocaleDateString("cs-CZ");
 }
 
-// --- AUTH ---
+// --- PŘIHLAŠOVÁNÍ A AUTHENTIKACE ---
 function checkAuth() {
     const saved = localStorage.getItem("mdt_creds") || sessionStorage.getItem("mdt_creds");
     if (saved) {
@@ -327,11 +389,11 @@ function checkAuth() {
         document.getElementById("loggedInUser").innerText = "👤 " + activeCreds.rank + " " + activeCreds.fName + " " + activeCreds.lName;
         
         const isHighCommand = activeCreds.rank === "Staff" || activeCreds.rank === "Lieutenant";
-        const categorySelector = document.getElementById("categorySelector");
+        const catSel = document.getElementById("categorySelector");
         
         if (isHighCommand && !document.getElementById("optLogy")) {
-            categorySelector.innerHTML += `<option id="optArchiv" value="Archiv smazanych" class="admin-category">[ADMIN] Archiv smazaných</option>`;
-            categorySelector.innerHTML += `<option id="optLogy" value="Logy" class="admin-category">[ADMIN] Systémové logy</option>`;
+            catSel.innerHTML += `<option id="optArchiv" value="Archiv smazanych" class="admin-category">[ADMIN] Archiv smazaných</option>`;
+            catSel.innerHTML += `<option id="optLogy" value="Logy" class="admin-category">[ADMIN] Systémové logy</option>`;
         }
         changeCategory(); 
         loadData();       
@@ -346,31 +408,29 @@ function performLogin() {
     const fName = document.getElementById("loginFName").value.trim();
     const lName = document.getElementById("loginLName").value.trim();
     const password = document.getElementById("loginPassword").value;
-    const remember = document.getElementById("rememberMe").checked; // TADY TO PADALO!
+    const remember = document.getElementById("rememberMe").checked;
 
     if (!rank || !fName || !lName || !password) {
-        alert("Prosím vyplňte všechna pole včetně hesla."); return;
+        alert("Prosím vyplňte všechna pole včetně hesla."); 
+        return;
     }
 
     const creds = { rank, fName, lName, password };
-    
-    if (remember) localStorage.setItem("mdt_creds", JSON.stringify(creds));
-    else sessionStorage.setItem("mdt_creds", JSON.stringify(creds));
+    if (remember) {
+        localStorage.setItem("mdt_creds", JSON.stringify(creds));
+    } else {
+        sessionStorage.setItem("mdt_creds", JSON.stringify(creds));
+    }
     checkAuth();
 }
 
 function logout() {
     localStorage.removeItem("mdt_creds");
     sessionStorage.removeItem("mdt_creds");
-    document.getElementById("loginRank").value = "";
-    document.getElementById("loginFName").value = "";
-    document.getElementById("loginLName").value = "";
     document.getElementById("loginPassword").value = "";
     
-    const optLogy = document.getElementById("optLogy");
-    const optArchiv = document.getElementById("optArchiv");
-    if(optLogy) optLogy.remove();
-    if(optArchiv) optArchiv.remove();
+    if (document.getElementById("optLogy")) document.getElementById("optLogy").remove();
+    if (document.getElementById("optArchiv")) document.getElementById("optArchiv").remove();
     
     switchTab('db');
     checkAuth();
@@ -378,108 +438,176 @@ function logout() {
 
 window.onload = checkAuth;
 
-// --- ZÁLOŽKY A MAPA ---
+// --- ZÁLOŽKY A ZÁKONY ---
 function switchTab(tabId) {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tabId).classList.add('active');
+    
     ['databaseSection', 'mapSection', 'templatesSection', 'pdfSection'].forEach(s => document.getElementById(s).style.display = 'none');
     
     if (tabId === 'db') document.getElementById('databaseSection').style.display = 'flex';
     if (tabId === 'map') document.getElementById('mapSection').style.display = 'flex'; 
     if (tabId === 'tpl') {
         document.getElementById('templatesSection').style.display = 'flex';
-        changeTemplate();
+        changeTemplate(); 
     }
     if (tabId === 'pdf') document.getElementById('pdfSection').style.display = 'flex';
 }
-function loadPdf(url) { document.getElementById('pdfFrame').src = url; }
 
+function loadPdf(url) {
+    document.getElementById('pdfFrame').src = url;
+}
+
+// --- INTERAKTIVNÍ MAPA ---
 let scale = 1; let panning = false; let pointX = 0, pointY = 0; let startX = 0, startY = 0;
 const mapContainer = document.getElementById("mapContainer");
 const mapImage = document.getElementById("mapImage");
-function setTransform() { mapImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`; }
+
+function setTransform() { 
+    mapImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`; 
+}
+
 mapContainer.onmousedown = function (e) { e.preventDefault(); panning = true; startX = e.clientX - pointX; startY = e.clientY - pointY; };
 mapContainer.onmouseup = function () { panning = false; };
 mapContainer.onmouseleave = function () { panning = false; };
 mapContainer.onmousemove = function (e) { if (!panning) return; e.preventDefault(); pointX = e.clientX - startX; pointY = e.clientY - startY; setTransform(); };
-mapContainer.onwheel = function (e) { e.preventDefault(); const xs = (e.clientX - pointX) / scale; const ys = (e.clientY - pointY) / scale; const delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY); (delta > 0) ? (scale *= 1.2) : (scale /= 1.2); if (scale < 0.2) scale = 0.2; if (scale > 10) scale = 10; pointX = e.clientX - xs * scale; pointY = e.clientY - ys * scale; setTransform(); };
+mapContainer.onwheel = function (e) { 
+    e.preventDefault(); 
+    const xs = (e.clientX - pointX) / scale; 
+    const ys = (e.clientY - pointY) / scale; 
+    const delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY); 
+    (delta > 0) ? (scale *= 1.2) : (scale /= 1.2); 
+    if (scale < 0.2) scale = 0.2; 
+    if (scale > 10) scale = 10; 
+    pointX = e.clientX - xs * scale; 
+    pointY = e.clientY - ys * scale; 
+    setTransform(); 
+};
 mapContainer.ontouchstart = function(e) { if (e.touches.length === 1) { panning = true; startX = e.touches[0].clientX - pointX; startY = e.touches[0].clientY - pointY; } };
 mapContainer.ontouchend = function() { panning = false; };
 mapContainer.ontouchmove = function(e) { if (!panning) return; if (e.touches.length === 1) { pointX = e.touches[0].clientX - startX; pointY = e.touches[0].clientY - startY; setTransform(); } };
+
 function zoomMapBtn(amount) { scale += amount; if(scale < 0.2) scale = 0.2; if(scale > 10) scale = 10; setTransform(); }
 function resetMap() { scale = 1; pointX = 0; pointY = 0; setTransform(); }
 
-// --- PŘEDTISKY (Z minula) ---
+// --- GENERÁTOR HLÁŠENÍ ---
 function changeTemplate() {
     const area = document.getElementById("activeTemplateArea");
     area.innerHTML = `
-        <p>Vážený @Soudce / @Statni zastupce tímto žádám o vyjádření k rozhodnutí ve věci zkráceného řízení:</p>
+        <p style="margin-top:0; color:#f8fafc;">Vážený @Soudce / @Statni zastupce tímto žádám o vyjádření k rozhodnutí ve věci zkráceného řízení:</p>
         <div class="inline-form-row">
-            <span>Osoba</span> <input type="text" id="tpl_osoba" class="inline-input" placeholder="Jméno Příjmení">
-            <span>DOB:</span> <input type="text" id="tpl_dob" class="inline-input" placeholder="DD.MM.YYYY" style="width: 100px;">
-            <span>nesouhlasí s rozhodnutím státní ozbrojené složky ve věci zkráceného řízení pro</span> <input type="text" id="tpl_cin1" class="inline-input" placeholder="trestný čin">
+            <span>Osoba</span> 
+            <input type="text" id="tpl_osoba" class="inline-input" placeholder="Jméno Příjmení">
+            <span>DOB:</span> 
+            <input type="text" id="tpl_dob" class="inline-input" placeholder="DD.MM.YYYY" style="width: 100px;">
+            <span>nesouhlasí s rozhodnutím státní ozbrojené složky ve věci zkráceného řízení pro</span> 
+            <input type="text" id="tpl_cin1" class="inline-input" placeholder="Trestný čin">
         </div>
         <div class="inline-form-row">
-            <span>Výše uvedený(á) dne</span> <input type="text" id="tpl_datum" class="inline-input" placeholder="datum" style="width: 100px;">
-            <span>kolem</span> <input type="text" id="tpl_cas" class="inline-input" placeholder="čas" style="width: 80px;">
-            <input type="text" id="tpl_popis" class="inline-input" placeholder="popis jednání osoby" style="flex:1;">
+            <span>Výše uvedený(á) dne</span> 
+            <input type="text" id="tpl_datum" class="inline-input" placeholder="Datum" style="width: 100px;">
+            <span>kolem</span> 
+            <input type="text" id="tpl_cas" class="inline-input" placeholder="Čas" style="width: 80px;">
+            <input type="text" id="tpl_popis" class="inline-input" placeholder="Popis jednání osoby" style="flex:1;">
         </div>
-        <div style="margin-top: 15px;"><label style="color:#94a3b8; font-size:12px;">Důvod nesouhlasu s trestem:</label><textarea id="tpl_duvod" class="inline-textarea" rows="4"></textarea></div>
-        <div style="margin-top: 15px;"><label style="color:#94a3b8; font-size:12px;">Důkazní prostředky:</label><textarea id="tpl_dukazy" class="inline-textarea" rows="3"></textarea></div>
+        
+        <span class="textarea-label">Důvod nesouhlasu s trestem:</span>
+        <textarea id="tpl_duvod" class="inline-textarea" placeholder="Detailní popis nesouhlasu..."></textarea>
+        
+        <span class="textarea-label">Důkazní prostředky:</span>
+        <textarea id="tpl_dukazy" class="inline-textarea" placeholder="Seznam důkazů..."></textarea>
+        
         <div class="inline-form-row" style="margin-top: 15px;">
-            <span>Výpis z rejstříku: byl již</span> <input type="number" id="tpl_pocet" class="inline-input" placeholder="počet" style="width: 60px;">
-            <span>x trestán pro</span> <input type="text" id="tpl_cin2" class="inline-input" placeholder="trestný čin" style="flex:1;">
+            <span>Výpis z rejstříku: byl již</span> 
+            <input type="number" id="tpl_pocet" class="inline-input" placeholder="Počet" style="width: 60px;">
+            <span>x trestán pro</span> 
+            <input type="text" id="tpl_cin2" class="inline-input" placeholder="Trestný čin" style="flex:1;">
         </div>
-        <p style="margin-top: 30px;">Děkuji,<br>S pozdravem<br><b>${activeCreds ? activeCreds.rank + " " + activeCreds.fName + " " + activeCreds.lName : ""}</b></p>
+        <p style="margin-top: 30px;">Děkuji,<br>S pozdravem<br><b style="color:#60a5fa;">${activeCreds ? activeCreds.rank + " " + activeCreds.fName + " " + activeCreds.lName : ""}</b></p>
         <button class="btn-copy" onclick="generateAndCopyNesouhlas()">Zkopírovat hlášení do schránky</button>
     `;
 }
 
 function generateAndCopyNesouhlas() {
-    const finalReport = `Vážený @Soudce / @Statni zastupce tímto žádám o vyjádření k rozhodnutí ve věci zkráceného řízení:\n\nOsoba ${document.getElementById("tpl_osoba").value} DOB: ${document.getElementById("tpl_dob").value} nesouhlasí s rozhodnutím státní ozbrojené složky ve věci zkráceného řízení pro ${document.getElementById("tpl_cin1").value}.\nVýše uvedený(á) dne ${document.getElementById("tpl_datum").value} kolem ${document.getElementById("tpl_cas").value} ${document.getElementById("tpl_popis").value}.\n\nDůvod nesouhlasu s trestem:\n${document.getElementById("tpl_duvod").value}\n\nDůkazní prostředky:\n${document.getElementById("tpl_dukazy").value}\n\nVýpis z rejstříku: byl již ${document.getElementById("tpl_pocet").value} x trestán pro ${document.getElementById("tpl_cin2").value}.\n\nDěkuji,\nS pozdravem\n${activeCreds.rank} ${activeCreds.fName} ${activeCreds.lName}`;
-    navigator.clipboard.writeText(finalReport).then(() => alert("Hlášení bylo úspěšně vygenerováno a zkopírováno!")).catch(err => alert("Chyba při kopírování: " + err));
+    const finalReport = `Vážený @Soudce / @Statni zastupce tímto žádám o vyjádření k rozhodnutí ve věci zkráceného řízení:
+
+Osoba ${document.getElementById("tpl_osoba").value} DOB: ${document.getElementById("tpl_dob").value} nesouhlasí s rozhodnutím státní ozbrojené složky ve věci zkráceného řízení pro ${document.getElementById("tpl_cin1").value}.
+Výše uvedený(á) dne ${document.getElementById("tpl_datum").value} kolem ${document.getElementById("tpl_cas").value} ${document.getElementById("tpl_popis").value}.
+
+Důvod nesouhlasu s trestem:
+${document.getElementById("tpl_duvod").value}
+
+Důkazní prostředky:
+${document.getElementById("tpl_dukazy").value}
+
+Výpis z rejstříku: byl již ${document.getElementById("tpl_pocet").value} x trestán pro ${document.getElementById("tpl_cin2").value}.
+
+Děkuji,
+S pozdravem
+${activeCreds.rank} ${activeCreds.fName} ${activeCreds.lName}`;
+
+    navigator.clipboard.writeText(finalReport).then(() => {
+        alert("Hlášení bylo úspěšně zkopírováno. Můžete ho vložit (Ctrl+V).");
+    }).catch(err => alert("Chyba při kopírování: " + err));
 }
 
-// --- DATABÁZE LOGIKA ---
+// --- LOGIKA FORMULÁŘŮ (BUILDER) ---
 function buildForm(category) {
     const formDiv = document.getElementById("dynamicForm");
     const submitBtn = document.getElementById("submitBtn");
     formDiv.innerHTML = "";
 
     if (category === "Logy" || category === "Archiv smazanych") {
-        formDiv.innerHTML = "<p style='color:#fca5a5;'>Systémová sekce (Pouze čtení).</p>";
-        submitBtn.style.display = "none"; return;
+        formDiv.innerHTML = "<p style='color:#fca5a5;'>Systémová sekce (Pouze pro čtení).</p>";
+        submitBtn.style.display = "none"; 
+        return;
     }
+    
     submitBtn.style.display = "block";
     const schema = formSchemas[category];
     
     schema.forEach(field => {
         let inputElement;
         if (field.type === "select") {
-            inputElement = document.createElement("select"); inputElement.id = field.id;
-            field.options.forEach(opt => { let o = document.createElement("option"); o.value = opt; o.innerText = opt; inputElement.appendChild(o); });
+            inputElement = document.createElement("select"); 
+            inputElement.id = field.id;
+            field.options.forEach(opt => { 
+                let option = document.createElement("option"); 
+                option.value = opt; 
+                option.innerText = opt; 
+                inputElement.appendChild(option); 
+            });
         } else if (field.type === "textarea") {
-            inputElement = document.createElement("textarea"); inputElement.id = field.id; inputElement.placeholder = field.placeholder;
+            inputElement = document.createElement("textarea"); 
+            inputElement.id = field.id; 
+            inputElement.placeholder = field.placeholder;
         } else {
-            inputElement = document.createElement("input"); inputElement.id = field.id; inputElement.placeholder = field.placeholder; inputElement.type = "text";
+            inputElement = document.createElement("input"); 
+            inputElement.id = field.id; 
+            inputElement.placeholder = field.placeholder; 
+            inputElement.type = "text";
         }
         
-        if (!editingId && field.id.toLowerCase().includes("detektiv")) {
-            inputElement.value = activeCreds.rank + " " + activeCreds.fName + " " + activeCreds.lName;
+        // Auto-fill detektiva a datumu u nového záznamu
+        if (!editingId) {
+            if (field.id.toLowerCase().includes("detektiv")) {
+                inputElement.value = activeCreds.rank + " " + activeCreds.fName + " " + activeCreds.lName;
+            }
+            if (field.id === "Datum") {
+                inputElement.value = getTodayDate();
+            }
         }
-        if (!editingId && field.id.toLowerCase().includes("datum")) {
-            if (field.id === "Datum vytvoření" || field.id === "Datum založení") inputElement.value = getTodayDate();
-        }
-
         formDiv.appendChild(inputElement);
     });
 }
 
 function changeCategory() {
-    if (editingId && !confirm("Máš rozepsanou úpravu. Chceš ji zahodit?")) {
-        const record = currentData.find(r => r.ID === editingId);
-        if (record) document.getElementById("categorySelector").value = record._Kategorie;
-        return;
+    if (editingId) {
+        if (!confirm("Máš rozepsanou úpravu záznamu. Chceš ji zahodit?")) {
+            const record = currentData.find(r => r.ID === editingId);
+            if (record) document.getElementById("categorySelector").value = record._Kategorie;
+            return;
+        }
     }
     cancelEdit();
     const category = document.getElementById("categorySelector").value;
@@ -488,113 +616,164 @@ function changeCategory() {
     renderList(); 
 }
 
+// --- KOMUNIKACE S BACKENDEM ---
 async function loadData() {
     document.getElementById("loader").style.display = "block";
     try {
         const res = await fetch(`${SCRIPT_URL}?sheet=all`);
         currentData = await res.json();
         renderList();
-    } catch (e) { console.log(e); }
+    } catch (e) { 
+        console.log("Chyba při načítání dat:", e); 
+    }
     document.getElementById("loader").style.display = "none";
 }
 
 async function saveRecord() {
     const category = document.getElementById("categorySelector").value;
     let rowData = [];
-    formSchemas[category].forEach(field => { rowData.push(document.getElementById(field.id).value); });
+    formSchemas[category].forEach(field => { 
+        rowData.push(document.getElementById(field.id).value); 
+    });
 
     document.getElementById("loader").style.display = "block";
     
     const payload = { 
-        sheetName: category, action: editingId ? "update" : "create", id: editingId, rowData: rowData, 
-        rank: activeCreds.rank, fName: activeCreds.fName, lName: activeCreds.lName, password: activeCreds.password
+        sheetName: category, 
+        action: editingId ? "update" : "create", 
+        id: editingId, 
+        rowData: rowData, 
+        rank: activeCreds.rank, 
+        fName: activeCreds.fName, 
+        lName: activeCreds.lName, 
+        password: activeCreds.password 
     };
 
     try {
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
         if (result.status === "success") {
-            cancelEdit(); await loadData();
+            cancelEdit(); 
+            await loadData();
         } else {
-            alert(result.message); 
-            if(result.message.includes("ODEPŘEN")) logout(); // Vyhodí uživatele při špatném hesle
+            alert("Upozornění ze serveru:\n" + result.message); 
+            if (result.message.includes("ODEPŘEN") || result.message.includes("CHYBA")) {
+                logout(); // Vyhodí uživatele při změněném hesle za chodu
+            }
         }
-    } catch (e) { alert("Chyba při komunikaci se serverem."); }
+    } catch (e) { 
+        alert("Kritická chyba při komunikaci se serverem."); 
+    }
     document.getElementById("loader").style.display = "none";
 }
 
 async function deleteRecord(id) {
-    if (!confirm(`Opravdu smazat záznam ${id}? (Přesune se do archivu)`)) return;
-    const record = currentData.find(r => r.ID === id || r["ID Záznamu"] === id || r["ID Osoby"] === id || r["ID Spisu"] === id || r["ID Organizace"] === id);
-    if(!record) return;
-
-    let realId = record["ID Osoby"] || record["ID Záznamu"] || record["ID Spisu"] || record["ID Organizace"] || record.ID;
+    if (!confirm(`Opravdu smazat záznam s ID ${id}? (Přesune se do archivu)`)) return;
+    
+    const record = currentData.find(r => r.ID === id);
+    if (!record) return;
 
     document.getElementById("loader").style.display = "block";
+    
     const payload = { 
-        sheetName: record._Kategorie, action: "delete", id: realId, rowData: [], 
-        rank: activeCreds.rank, fName: activeCreds.fName, lName: activeCreds.lName, password: activeCreds.password
+        sheetName: record._Kategorie, 
+        action: "delete", 
+        id: id, 
+        rowData: [], 
+        rank: activeCreds.rank, 
+        fName: activeCreds.fName, 
+        lName: activeCreds.lName, 
+        password: activeCreds.password 
     };
+
     try {
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
         if (result.status === "success") {
-            if (editingId === realId) cancelEdit(); await loadData(); 
-        } else alert(result.message);
-    } catch(e) { alert("Chyba při mazání."); }
+            if (editingId === id) cancelEdit(); 
+            await loadData(); 
+        } else {
+            alert(result.message);
+        }
+    } catch(e) { 
+        alert("Chyba při mazání."); 
+    }
     document.getElementById("loader").style.display = "none";
 }
 
 function startEdit(id) {
-    const record = currentData.find(r => r["ID Osoby"] === id || r["ID Záznamu"] === id || r["ID Spisu"] === id || r["ID Organizace"] === id || r.ID === id);
+    const record = currentData.find(r => r.ID === id);
     if (!record) return;
+    
     editingId = id;
     document.getElementById("categorySelector").value = record._Kategorie;
     buildForm(record._Kategorie);
+    
     document.getElementById("formTitle").innerText = "Úprava: " + id;
     document.getElementById("submitBtn").innerText = "Uložit změny";
     document.getElementById("submitBtn").classList.add("edit-mode");
     document.getElementById("cancelEditBtn").style.display = "block";
 
     formSchemas[record._Kategorie].forEach(field => {
-        if (document.getElementById(field.id)) document.getElementById(field.id).value = record[field.id] || "";
+        if (document.getElementById(field.id)) {
+            document.getElementById(field.id).value = record[field.id] || "";
+        }
     });
 }
+
 function cancelEdit() {
     editingId = null;
-    changeCategory();
+    const category = document.getElementById("categorySelector").value;
+    document.getElementById("formTitle").innerText = "Záznam: " + category;
+    document.getElementById("submitBtn").innerText = "Uložit do databáze";
+    document.getElementById("submitBtn").classList.remove("edit-mode");
+    document.getElementById("cancelEditBtn").style.display = "none";
+    buildForm(category);
 }
 
-// --- KARTA OSOBY ---
+// --- MASTER NAME INDEX (ZJISTI VŠE O OSOBĚ) ---
+
+// Pomocná funkce k extrakci plného jména podle kategorie
+function getFullNameFromRecord(r) {
+    if (r._Kategorie === "Informatori") {
+        return (r["Skutečné Jméno"] || "") + " " + (r["Skutečné Příjmení"] || "");
+    }
+    return (r["Jméno"] || "") + " " + (r["Příjmení"] || "");
+}
+
 function getPersonTags(personFullName, dob) {
     let tagsHTML = "";
-    const relatedRecords = currentData.filter(r => r._Kategorie === "Zaznamy" && r["Jméno a Příjmení"] === personFullName && r["Datum narození"] === dob);
+    const nameLower = personFullName.trim().toLowerCase();
     
-    let isWanted = relatedRecords.some(r => r["Typ záznamu"].includes("Zatykač"));
-    let isInformant = relatedRecords.some(r => r["Typ záznamu"].includes("Informátor"));
-    let isArrested = relatedRecords.some(r => r["Typ záznamu"].includes("Zadržení"));
+    const isWanted = currentData.some(r => r._Kategorie === "Osoby v patrani" && getFullNameFromRecord(r).trim().toLowerCase() === nameLower && r["Datum narození"] === dob && r["Stav pátrání"] === "Aktivní");
+    const isInformant = currentData.some(r => r._Kategorie === "Informatori" && getFullNameFromRecord(r).trim().toLowerCase() === nameLower && r["Datum narození"] === dob);
+    const hasRecord = currentData.some(r => r._Kategorie === "Zadrzene osoby" && getFullNameFromRecord(r).trim().toLowerCase() === nameLower && r["Datum narození"] === dob);
 
-    if (isWanted) tagsHTML += `<span class="tag tag-wanted">🚨 V PÁTRÁNÍ</span>`;
+    if (isWanted) tagsHTML += `<span class="tag tag-wanted">🚨 AKTIVNÍ ZATYKAČ</span>`;
     if (isInformant) tagsHTML += `<span class="tag tag-informant">🕵️ INFORMÁTOR</span>`;
-    if (isArrested) tagsHTML += `<span class="tag tag-case">🚔 ZADRŽEN V MINULOSTI</span>`;
+    if (hasRecord) tagsHTML += `<span class="tag tag-case">🚔 TRESTNÍ REJSTŘÍK</span>`;
 
     return tagsHTML;
 }
 
 function openPersonModal(personId) {
-    const person = currentData.find(r => r["ID Osoby"] === personId);
-    if(!person) return;
+    const person = currentData.find(r => r.ID === personId);
+    if (!person) return;
 
-    const fullName = person["Jméno"] + " " + person["Příjmení"];
+    const fullName = getFullNameFromRecord(person).trim();
+    const nameLower = fullName.toLowerCase();
     const dob = person["Datum narození"];
     
-    const myRecords = currentData.filter(r => r._Kategorie === "Zaznamy" && r["Jméno a Příjmení"] === fullName && r["Datum narození"] === dob);
-    const myCases = currentData.filter(r => r._Kategorie === "Spisy" && r["Sledované osoby"].includes(fullName));
+    // Vyhledání všech vazeb na osobu
+    const recordsArrest = currentData.filter(r => r._Kategorie === "Zadrzene osoby" && getFullNameFromRecord(r).trim().toLowerCase() === nameLower && r["Datum narození"] === dob);
+    const recordsWanted = currentData.filter(r => r._Kategorie === "Osoby v patrani" && getFullNameFromRecord(r).trim().toLowerCase() === nameLower && r["Datum narození"] === dob);
+    const recordsInformant = currentData.filter(r => r._Kategorie === "Informatori" && getFullNameFromRecord(r).trim().toLowerCase() === nameLower && r["Datum narození"] === dob);
+    const recordsCases = currentData.filter(r => r._Kategorie === "Spisy" && (r["Sledované osoby"] || "").toLowerCase().includes(nameLower));
 
     let html = `
         <div class="person-header">
             <div class="person-photo">
-                <img src="${person.Fotka && person.Fotka.startsWith("http") ? person.Fotka : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'}">
+                <img src="${person.Fotka && person.Fotka.startsWith("http") ? person.Fotka : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'}" alt="Fotka osoby">
             </div>
             <div class="person-info">
                 <h3>${fullName}</h3>
@@ -602,31 +781,56 @@ function openPersonModal(personId) {
                 <p style="margin-top: 15px;"><b>Datum narození:</b> ${dob}</p>
                 <p><b>Telefon:</b> ${person.Telefon || 'Neznámý'}</p>
                 <p><b>Zaměstnání:</b> ${person.Zaměstnání || 'Neznámé'}</p>
-                <p><b>Vozidla:</b> ${person.Vozidla || 'Žádná'}</p>
+                <p><b>Vozidla (SPZ):</b> ${person.Vozidla || 'Žádná'}</p>
             </div>
         </div>
     `;
 
-    if (myRecords.length > 0) {
-        html += `<div class="history-section"><h4>Události a Záznamy (${myRecords.length})</h4>`;
-        myRecords.forEach(rec => {
-            const isAlert = rec["Typ záznamu"].includes("Zatykač") ? "zatykac" : "";
-            html += `<div class="history-item ${isAlert}">
-                <b>${rec["Datum vytvoření"]} | ${rec["Typ záznamu"]}</b> (ID: ${rec["ID Záznamu"]})<br>
-                <b>Důvod:</b> ${rec["Tresty/Důvod"] || "N/A"}<br>
-                <b>Výslech/Pozn.:</b> ${rec["Poznámky/Výslech"] || "N/A"}<br>
-                <i>Vyšetřoval: ${rec.Detektiv}</i>
+    if (recordsWanted.length > 0) {
+        html += `<div class="history-section"><h4>🚨 Zatykače a Pátrání (${recordsWanted.length})</h4>`;
+        recordsWanted.forEach(w => {
+            html += `<div class="history-item zatykac">
+                <b>${w.Datum} | Status: ${w.Status} (${w["Stav pátrání"]})</b> (ID: ${w.ID})<br>
+                <b>Důvod:</b> ${w["Důvod zatykače"] || "N/A"}<br>
+                <b>Předp. výskyt:</b> ${w["Oblast výskytu"] || "Neznámo"}<br>
+                <i>Vyhlásil: ${w.Detektiv}</i>
             </div>`;
         });
         html += `</div>`;
     }
 
-    if (myCases.length > 0) {
-        html += `<div class="history-section"><h4>Zmíněn v hlavních spisech (${myCases.length})</h4>`;
-        myCases.forEach(c => {
+    if (recordsArrest.length > 0) {
+        html += `<div class="history-section"><h4>🚔 Zadržení a Výslechy (${recordsArrest.length})</h4>`;
+        recordsArrest.forEach(a => {
+            html += `<div class="history-item">
+                <b>${a.Datum} | Zadržení</b> (ID: ${a.ID})<br>
+                <b>Tresty/Důvody:</b> ${a.Tresty || "N/A"}<br>
+                <b>Důkazy:</b> ${a.Důkazy || "Žádné"}<br>
+                <b>Poznámky/Výslech:</b> ${a.Poznámky || "N/A"}<br>
+                <i>Zpracoval: ${a.Detektiv}</i>
+            </div>`;
+        });
+        html += `</div>`;
+    }
+
+    if (recordsInformant.length > 0) {
+        html += `<div class="history-section"><h4>🕵️ Informátorská činnost (${recordsInformant.length})</h4>`;
+        recordsInformant.forEach(i => {
+            html += `<div class="history-item informant">
+                <b>Krycí jméno: "${i["Krycí jméno"] || "Nezadáno"}"</b> (ID: ${i.ID})<br>
+                <b>Stav:</b> ${i["Stav informátora"]} (${i["Status odměny"]})<br>
+                <i>Řídící detektiv: ${i.Detektiv}</i>
+            </div>`;
+        });
+        html += `</div>`;
+    }
+
+    if (recordsCases.length > 0) {
+        html += `<div class="history-section"><h4>📁 Zmíněn v hlavních spisech (${recordsCases.length})</h4>`;
+        recordsCases.forEach(c => {
             html += `<div class="history-item spis">
-                <b>${c["Název Spisu"]}</b> (ID: ${c["ID Spisu"]})<br>
-                Založeno: ${c["Datum založení"]} detektivem ${c["Založil detektiv"]}.
+                <b>${c["Název Spisu"]}</b> (ID: ${c.ID})<br>
+                Založeno: ${c.Datum} detektivem ${c["Založil detektiv"]}.
             </div>`;
         });
         html += `</div>`;
@@ -640,8 +844,9 @@ function closeModal() {
     document.getElementById("personModal").style.display = "none";
 }
 
+// --- VYKRESLENÍ SEZNAMU (FILTROVÁNÍ) ---
 function renderList() {
-    const search = removeDiacritics(document.getElementById("search").value.toLowerCase());
+    const searchString = removeDiacritics(document.getElementById("search").value.toLowerCase());
     const currentCategory = document.getElementById("categorySelector").value;
     const listDiv = document.getElementById("recordList");
     listDiv.innerHTML = "";
@@ -651,53 +856,64 @@ function renderList() {
     const isCSI = activeCreds.rank === "CSI";
 
     let filteredData = [];
-    if (search.trim() === "") {
+    if (searchString.trim() === "") {
         filteredData = currentData.filter(row => row._Kategorie === currentCategory);
     } else {
         filteredData = currentData.filter(row => {
             if ((row._Kategorie === "Logy" || row._Kategorie === "Archiv smazanych") && 
                 (currentCategory !== "Logy" && currentCategory !== "Archiv smazanych")) return false; 
-            return removeDiacritics(Object.values(row).join(" ").toLowerCase()).includes(search);
+            return removeDiacritics(Object.values(row).join(" ").toLowerCase()).includes(searchString);
         });
     }
 
-    if (filteredData.length === 0) { listDiv.innerHTML = "<p style='text-align:center;'>Žádné záznamy.</p>"; return; }
+    if (filteredData.length === 0) { 
+        listDiv.innerHTML = "<p style='text-align:center;'>Nebyly nalezeny žádné záznamy.</p>"; 
+        return; 
+    }
 
     filteredData.forEach(row => {
         const card = document.createElement("div");
         card.className = "card";
         
-        let realId = row["ID Osoby"] || row["ID Záznamu"] || row["ID Spisu"] || row["ID Organizace"] || row.ID || "N/A";
-        let html = `<b>ID: ${realId}</b> <span class="category-badge">${row._Kategorie}</span><br><br>`;
+        let html = `<b>ID: ${row.ID || "N/A"}</b> <span class="category-badge">${row._Kategorie}</span><br><br>`;
         
+        // Pokud jsme v centrální evidenci OSOBY, ukaž štítky. Jinak vypisuj klasická data.
         if (row._Kategorie === "Osoby") {
-            const fullName = row["Jméno"] + " " + row["Příjmení"];
-            html += `<b>${fullName}</b> (DOB: ${row["Datum narození"]})<br>`;
+            const fullName = getFullNameFromRecord(row);
+            html += `<b style="font-size:16px;">${fullName}</b> (DOB: ${row["Datum narození"]})<br>`;
             html += getPersonTags(fullName, row["Datum narození"]) + `<br><br>`;
         } else {
             for (let key in row) {
-                if (!key.startsWith("ID") && key !== "_Kategorie" && row[key] !== "") {
-                    html += `<span class="label">${key}:</span> ${row[key]}<br>`;
+                if (key !== "ID" && key !== "_Kategorie" && row[key] !== "") {
+                    // Zobrazení fotky u Zadržených
+                    if (key.toLowerCase().includes("fotka") && row[key].startsWith("http")) {
+                        html += `<span class="label">${key}:</span><br><img src="${row[key]}" style="max-width: 150px; border-radius:4px; margin: 5px 0;"><br>`;
+                    } else {
+                        html += `<span class="label">${key}:</span> ${row[key]}<br>`;
+                    }
                 }
             }
         }
 
         html += `<div class="card-actions">`;
+        
+        // Tlačítko pro Master Name Index Modal okno
         if (row._Kategorie === "Osoby") {
-            html += `<button class="btn-folder" onclick="openPersonModal('${realId}')">📁 Otevřít složku</button>`;
+            html += `<button class="btn-folder" onclick="openPersonModal('${row.ID}')">📁 Otevřít složku / Trestní rejstřík</button>`;
         }
 
+        // Zabezpečení zobrazení tlačítek Úpravy a Mazání
         const isOwner = Object.values(row).includes(activeUserStr);
         const canEdit = isHighCommand || (isOwner && !isCSI);
 
         if (row._Kategorie === "Logy" || row._Kategorie === "Archiv smazanych") {
-            html += `<span style="color: #64748b; font-size: 11px;">🔒 Systémový záznam</span>`;
+            html += `<span style="color: #64748b; font-size: 11px;">🔒 Systémový záznam (Nelze upravit)</span>`;
         } else if (canEdit) {
-            html += `<button class="btn-edit" onclick="startEdit('${realId}')">✏️ Upravit</button> <button class="btn-danger" onclick="deleteRecord('${realId}')">🗑️ Smazat</button>`;
+            html += `<button class="btn-edit" onclick="startEdit('${row.ID}')">✏️ Upravit</button> <button class="btn-danger" onclick="deleteRecord('${row.ID}')">🗑️ Smazat</button>`;
         } else if (isCSI) {
-            html += `<span style="color: #64748b; font-size: 11px;">🔒 CSI (Jen čtení/zápis)</span>`;
+            html += `<span style="color: #64748b; font-size: 11px;">🔒 CSI (Pouze oprávnění ke čtení cizích spisů)</span>`;
         } else {
-            html += `<span style="color: #64748b; font-size: 11px;">🔒 Odepřen přístup k úpravám</span>`;
+            html += `<span style="color: #64748b; font-size: 11px;">🔒 Odepřen přístup k úpravám (Nejste autor)</span>`;
         }
         
         html += `</div>`;
