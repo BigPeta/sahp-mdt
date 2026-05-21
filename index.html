@@ -954,7 +954,7 @@ function renderGrid(searchTerm = '') {
         // 7. MODÁLNÍ OKNA A FORMULÁŘE (CRUD)
         // ==========================================
 
-function openModal(record = null) {
+        function openModal(record = null) {
             const container = document.getElementById('modal-container');
             const category = appState.activeCategory;
             const rank = appState.currentUser.hodnost;
@@ -966,6 +966,7 @@ function openModal(record = null) {
             const canSave = !isReadonly;
             const canDelete = !isNew && !isReadonly && !isCsi;
 
+            // Získání políček tabulky
             let fields = [];
             if (appState.data[category] && appState.data[category].length > 0) {
                 fields = Object.keys(appState.data[category][0]).filter(k => k !== 'ID' && k !== 'Datum' && k !== 'Datum smazání');
@@ -983,6 +984,7 @@ function openModal(record = null) {
                         <div class="modal-body ${fields.length < 5 ? 'full-width' : ''}" id="modal-form">
             `;
 
+            // Vykreslení inputů na základě sloupců v Tabulce
             fields.forEach(field => {
                 let val = '';
                 if (!isNew && record[field]) {
@@ -1049,6 +1051,20 @@ function openModal(record = null) {
             document.addEventListener('keydown', escListener);
         }
 
+        // Pomocná funkce pro vykreslení roletek
+        function generateSelectHtml(field, val, options, readonlyAttr) {
+            let s = `<div class="form-group"><label class="form-label">${escapeHTML(field)}</label>
+                     <select class="form-control" id="fld-${field}" ${readonlyAttr} onchange="saveDraft()">
+                     <option value="">-- Vyberte --</option>`;
+            options.forEach(opt => {
+                const sel = (val === opt) ? 'selected' : '';
+                s += `<option value="${opt}" ${sel}>${opt}</option>`;
+            });
+            s += `</select></div>`;
+            return s;
+        }
+
+        // --- Následují pomocné funkce (escListener, closeModal atd.), které už v kódu máš ---
         // Pomocná funkce pro vykreslení těch roletek výše
         function generateSelectHtml(field, val, options, readonlyAttr) {
             let s = `<div class="form-group"><label class="form-label">${escapeHTML(field)}</label>
