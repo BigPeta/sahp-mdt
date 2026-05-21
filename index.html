@@ -829,14 +829,16 @@
             });
         }
 
-        function renderGrid(searchTerm = '') {
+function renderGrid(searchTerm = '') {
             const grid = document.getElementById('data-grid');
             grid.innerHTML = '';
+            
+            // --- TADY JE TA PODMÍNKA PRO NÁSTROJE ---
             if (appState.activeCategory === "Nastroje") {
-    renderTools();
-    return;
-}
-
+                renderTools();
+                return; 
+            }
+            // ----------------------------------------
             
             const category = appState.activeCategory;
             let records = appState.data[category] || [];
@@ -851,7 +853,7 @@
                 });
             }
 
-            // Reverzní pořadí (nejnovější nahoře, pokud to má logiku - necháme dle pole)
+            // Reverzní pořadí (nejnovější nahoře)
             records = [...records].reverse(); 
 
             if (records.length === 0) {
@@ -868,12 +870,10 @@
                 let subtitle = '';
                 let tagsHTML = '';
 
-                // Formátování podle kategorie
                 if (['Osoby', 'Zadrzene osoby', 'Osoby v patrani', 'Informatori'].includes(category)) {
                     title = `${escapeHTML(record['Jméno'] || record['Skutečné Jméno'] || '')} ${escapeHTML(record['Příjmení'] || record['Skutečné Příjmení'] || '')}`;
                     subtitle = `DOB: ${escapeHTML(record['Datum narození'] || 'N/A')} | Telefon: ${escapeHTML(record['Telefon'] || 'N/A')}`;
                     
-                    // Generování štítků pro osoby
                     if (category === 'Osoby v patrani' || (record['Tresty'] && record['Tresty'].includes('Zatykač'))) {
                         tagsHTML += `<span class="tag tag-wanted"><i class="fa-solid fa-triangle-exclamation"></i> Hledaný</span>`;
                     }
@@ -902,7 +902,6 @@
                     <button class="btn btn-secondary" style="width: auto;">Otevřít složku</button>
                 `;
 
-                // Event listener pro otevření modálu (bude definováno ve Fázi 7)
                 card.onclick = () => {
                     if (typeof openModal === 'function') openModal(record);
                 };
