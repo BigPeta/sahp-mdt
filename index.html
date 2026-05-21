@@ -496,6 +496,9 @@
                     <input type="text" id="global-search" placeholder="Hledat jméno, SPZ, telefon, spis...">
                 </div>
                 <div class="user-panel">
+                    <button class="btn btn-secondary" onclick="forceRefresh()" title="Obnovit data z databáze" style="padding: 6px 12px; margin-right: 10px;">
+                        <i id="refresh-icon" class="fa-solid fa-arrows-rotate"></i>
+                    </button>
                     <div class="user-info">
                         <div class="user-name" id="ui-user-name">Jméno Příjmení</div>
                         <div class="user-rank" id="ui-user-rank">Hodnost</div>
@@ -602,7 +605,31 @@
                 }[tag] || tag)
             );
         }
+function formatCzechDate(dateString) {
+            if (!dateString) return '';
+            if (/^\d{2}\.\d{2}\.\d{4}$/.test(dateString)) return dateString; 
+            try {
+                const d = new Date(dateString);
+                if (isNaN(d.getTime())) return dateString;
+                const day = String(d.getDate()).padStart(2, '0');
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                return `${day}.${month}.${d.getFullYear()}`;
+            } catch(e) { return dateString; }
+        }
 
+        // Tlačítko pro manuální refresh
+        async function forceRefresh() {
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('fa-spin'); // Roztočení ikonky
+            const success = await fetchAllData();
+            icon.classList.remove('fa-spin');
+            if (success) {
+                renderGrid(document.getElementById('global-search').value);
+                showToast("Data byla úspěšně obnovena ze serveru.");
+            } else {
+                showToast("Chyba připojení při obnově dat.", "error");
+            }
+        }
         // Zpožďovač (Debounce) pro vyhledávání, aby nedošlo k zamrznutí UI při psaní
         function debounce(func, wait) {
             let timeout;
@@ -927,26 +954,23 @@ function renderGrid(searchTerm = '') {
         // 7. MODÁLNÍ OKNA A FORMULÁŘE (CRUD)
         // ==========================================
 
-        function openModal(record = null) {
+       function openModal(record = null) {
             const container = document.getElementById('modal-container');
             const category = appState.activeCategory;
             const rank = appState.currentUser.hodnost;
             
-            // Oprávnění
             const isAdmin = ['Lieutenant', 'Staff'].includes(rank);
             const isReadonly = ['Logy', 'Archiv smazanych'].includes(category);
             const isCsi = rank === 'CSI';
-
             const isNew = record === null;
             const canSave = !isReadonly;
             const canDelete = !isNew && !isReadonly && !isCsi;
 
-            // Získání struktury polí dynamicky z dat (vynecháme ID a automatické Datum)
             let fields = [];
             if (appState.data[category] && appState.data[category].length > 0) {
                 fields = Object.keys(appState.data[category][0]).filter(k => k !== 'ID' && k !== 'Datum' && k !== 'Datum smazání');
             } else {
-                fields = getFallbackFields(category); // Pokud je list prázdný
+                fields = getFallbackFields(category);
             }
 
             let html = `
@@ -958,6 +982,85 @@ function renderGrid(searchTerm = '') {
                         </div>
                         <div class="modal-body ${fields.length < 5 ? 'full-width' : ''}" id="modal-form">
             `;
+
+            fields.forEach(field => {
+                let val = '';
+                if (!isNew && record[field]) {
+                    val = record[field];
+                } else if (isNew && appState.unsavedForms[category] && appState.unsavedForms[category][field]) {
+                    val = appState.unsavedForms[category][field];
+                }
+
+                // Aplikace filtru pro datum
+                if (field.includes('Datum') || field.includes('DOB')) {
+                    val = formatCzechDate(val);
+                }
+
+                if (isNew && (field === 'Detektiv' || field === 'Založil detektiv' || field === 'Smazal')) {
+                    val = `${appState.currentUser.hodnost} ${appState.currentUser.jmeno} ${appState.currentUser.prijmeni}`;
+                }
+
+                const readonlyAttr = isReadonly ? 'readonly disabled' : '';
+                
+                // ROLETKY (Select)
+                if (field === 'Status odměny' && category === 'Informatori') {
+                    html += generateSelectHtml(field, val, ['Placený', 'Neplacený'], readonlyAttr);
+                } else if (field === 'Stav informátora' && category === 'Informatori') {
+                    html += generateSelectHtml(field, val, ['Aktivní', 'Neaktivní'], readonlyAttr);
+                } else if (field === 'Stav pátrání' && category === 'Osoby v patrani') {
+                    html += generateSelectHtml(field, val, ['Hledaný', 'Nehledaný'], readonlyAttr);
+                } else if (field === 'Status' && category === 'Osoby v patrani') {
+                    html += generateSelectHtml(field, val, ['Ozbrojen', 'Neozbrojen', 'Neznámo'], readonlyAttr);
+                } 
+                // TEXTOVÁ POLE (Velká)
+                else if (['Tresty', 'Důkazy', 'Poznámky', 'Obsah a poznámky', 'Záznam', 'Detail', 'Členové'].includes(field)) {
+                    html += `
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">${escapeHTML(field)}</label>
+                            <textarea class="form-control" id="fld-${field}" rows="4" ${readonlyAttr} oninput="saveDraft()">${escapeHTML(val)}</textarea>
+                        </div>
+                    `;
+                } 
+                // STANDARDNÍ POLE
+                else {
+                    html += `
+                        <div class="form-group">
+                            <label class="form-label">${escapeHTML(field)}</label>
+                            <input type="text" class="form-control" id="fld-${field}" value="${escapeHTML(val)}" ${readonlyAttr} oninput="saveDraft()">
+                        </div>
+                    `;
+                }
+            });
+
+            html += `</div><div class="modal-footer">`;
+            if (canDelete) {
+                html += `<button class="btn btn-danger" onclick="deleteRecord('${record.ID}')" style="margin-right: auto;"><i class="fa-solid fa-trash"></i> Smazat záznam</button>`;
+            }
+            html += `<button class="btn btn-secondary" onclick="closeModal()">Zavřít</button>`;
+            if (canSave) {
+                html += `<button class="btn btn-primary" id="btn-save-modal" onclick="saveRecord('${isNew ? '' : record.ID}')" style="width: auto;">
+                            <i class="fa-solid fa-floppy-disk"></i> Uložit <div class="spinner"></div>
+                         </button>`;
+            }
+            html += `</div></div></div>`;
+
+            container.innerHTML = html;
+            container.classList.remove('hidden');
+            document.addEventListener('keydown', escListener);
+        }
+
+        // Pomocná funkce pro vykreslení těch roletek výše
+        function generateSelectHtml(field, val, options, readonlyAttr) {
+            let s = `<div class="form-group"><label class="form-label">${escapeHTML(field)}</label>
+                     <select class="form-control" id="fld-${field}" ${readonlyAttr} onchange="saveDraft()">
+                     <option value="">-- Vyberte --</option>`;
+            options.forEach(opt => {
+                const sel = (val === opt) ? 'selected' : '';
+                s += `<option value="${opt}" ${sel}>${opt}</option>`;
+            });
+            s += `</select></div>`;
+            return s;
+        }
 
             // Vykreslení inputů na základě sloupců v Tabulce
             fields.forEach(field => {
