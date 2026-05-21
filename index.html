@@ -550,6 +550,7 @@
                 { id: "Organizace", icon: "fa-sitemap", label: "Organizace a Gangy" },
                 { id: "Logy", icon: "fa-list", label: "Systémové logy", adminOnly: true },
                 { id: "Archiv smazanych", icon: "fa-trash", label: "Archiv smazaných", adminOnly: true }
+                { id: "Nastroje", icon: "fa-toolbox", label: "Nástroje (Mapa, Zákony, Hlášení)" }
             ]
         };
 
@@ -831,6 +832,11 @@
         function renderGrid(searchTerm = '') {
             const grid = document.getElementById('data-grid');
             grid.innerHTML = '';
+            if (appState.activeCategory === "Nastroje") {
+    renderTools();
+    return;
+}
+
             
             const category = appState.activeCategory;
             let records = appState.data[category] || [];
@@ -1127,6 +1133,126 @@
             };
             return f[category] || ['Detail'];
         }
+        // ==========================================
+// 8. OSTATNÍ NÁSTROJE (Mapa, Předtisky, Export)
+// ==========================================
+
+function renderTools() {
+    const grid = document.getElementById('data-grid');
+    grid.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 20px; padding-bottom: 50px;">
+            
+            <div class="data-card" style="flex-direction: column; align-items: flex-start; overflow: visible;">
+                <div class="section-header" style="width: 100%; margin-bottom: 10px;">
+                    <h3 style="font-size: 16px; color: var(--text-main);"><i class="fa-solid fa-map-location-dot"></i> Interaktivní Mapa</h3>
+                    <button class="btn btn-secondary" onclick="resetMap()" style="padding: 4px 10px; font-size: 12px;">Reset pozice</button>
+                </div>
+                <div id="map-container" style="width: 100%; height: 500px; overflow: hidden; border: 1px solid var(--border); border-radius: 6px; cursor: grab; position: relative; background: #000;">
+                    
+                    <img id="game-map" src="ODKAZ_NA_OBRAZEK_MAPY.jpg" style="position: absolute; transform-origin: 0 0; transition: transform 0.05s linear;" draggable="false">
+                
+                </div>
+            </div>
+
+            <div class="data-card" style="flex-direction: column; align-items: flex-start;">
+                <h3 style="font-size: 16px; color: var(--text-main); margin-bottom: 5px;"><i class="fa-solid fa-file-contract"></i> Generátor formulářů</h3>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">Vyberte typ předtisku, který chcete vyplnit.</p>
+                <select class="form-control" id="template-select" onchange="loadTemplate()" style="margin-bottom: 15px; width: 300px;">
+                    <option value="">-- Vyberte předtisk --</option>
+                    <option value="nesouhlas">Nesouhlas s trestem (DOC-01)</option>
+                    <option value="zatykac">Žádost o zatykač</option>
+                </select>
+                <div id="template-workspace" style="width: 100%;"></div>
+            </div>
+            
+            <div class="data-card" style="flex-direction: row; gap: 20px;">
+                <button class="btn btn-primary" onclick="exportToJson()" style="width: auto;"><i class="fa-solid fa-download"></i> Export do JSON</button>
+                
+                <button class="btn btn-secondary" onclick="window.open('ODKAZ_NA_ZAKONY', '_blank')" style="width: auto;"><i class="fa-solid fa-scale-balanced"></i> Otevřít Zákony (Nové okno)</button>
+            </div>
+        </div>
+    `;
+    initMapControls();
+}
+
+// Logika pro Mapu (Drag & Zoom)
+let mapScale = 1;
+let mapX = 0; let mapY = 0;
+
+function initMapControls() {
+    const container = document.getElementById('map-container');
+    const map = document.getElementById('game-map');
+    if (!container || !map) return;
+
+    let isDragging = false;
+    let startX, startY;
+
+    container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        container.style.cursor = 'grabbing';
+        startX = e.clientX - mapX;
+        startY = e.clientY - mapY;
+    });
+
+    window.addEventListener('mouseup', () => { isDragging = false; container.style.cursor = 'grab'; });
+    window.addEventListener('mouseleave', () => { isDragging = false; container.style.cursor = 'grab'; });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        mapX = e.clientX - startX;
+        mapY = e.clientY - startY;
+        map.style.transform = `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
+    });
+
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoomSpeed = 0.1;
+        mapScale += (e.deltaY < 0) ? zoomSpeed : -zoomSpeed;
+        mapScale = Math.max(0.3, Math.min(mapScale, 4)); // Limity přiblížení
+        map.style.transform = `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
+    });
+}
+
+function resetMap() {
+    mapScale = 1; mapX = 0; mapY = 0;
+    const map = document.getElementById('game-map');
+    if(map) map.style.transform = `translate(0px, 0px) scale(1)`;
+}
+
+// Logika pro Předtisky
+function loadTemplate() {
+    const val = document.getElementById('template-select').value;
+    const workspace = document.getElementById('template-workspace');
+    
+    if (val === 'nesouhlas') {
+        workspace.innerHTML = `
+            <div style="background: var(--bg-input); padding: 20px; border: 1px solid var(--border); border-radius: 4px;">
+                <h4 style="margin-bottom: 15px;">Nesouhlas s trestem (DOC-01)</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group"><label class="form-label">Osoba</label><input type="text" class="form-control" placeholder="Jméno a Příjmení"></div>
+                    <div class="form-group"><label class="form-label">DOB</label><input type="text" class="form-control" placeholder="DD.MM.YYYY"></div>
+                    <div class="form-group" style="grid-column: 1/-1;"><label class="form-label">Důvod nesouhlasu</label><textarea class="form-control" rows="3"></textarea></div>
+                    <div class="form-group" style="grid-column: 1/-1;"><label class="form-label">Důkazní prostředky</label><textarea class="form-control" rows="2"></textarea></div>
+                </div>
+                <button class="btn btn-secondary" onclick="window.print()" style="margin-top: 10px;">Vytisknout / Uložit do PDF</button>
+            </div>
+        `;
+    } else if (val === 'zatykac') {
+        workspace.innerHTML = `<div style="padding: 20px; border: 1px dashed var(--border);">Zde by byl formulář pro zatykač...</div>`;
+    } else {
+        workspace.innerHTML = '';
+    }
+}
+
+// Export do JSON
+function exportToJson() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState.data, null, 2));
+    const a = document.createElement('a');
+    a.href = dataStr;
+    a.download = "mdt_databaze.json";
+    a.click();
+}
     </script>
 </body>
 </html>
